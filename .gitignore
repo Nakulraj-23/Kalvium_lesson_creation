@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+data/
+
+*.log
+run_log.txt
+finalize_log.txt
+.venv312/
+.DS_Store

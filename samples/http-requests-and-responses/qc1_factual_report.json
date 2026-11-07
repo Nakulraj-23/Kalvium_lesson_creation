@@ -1,0 +1,330 @@
+{
+  "layer": "qc_factual",
+  "lesson_version": 2,
+  "model": "openai/gpt-oss-20b",
+  "score": 85,
+  "summary": "The lesson accurately presents core HTTP method semantics and status code meanings, with most claims supported by reputable MDN and RFC sources. Minor gaps include lack of explicit citations for some statements and a few oversimplified claims about bookmarking and caching. Overall research quality is high, but adding precise references and clarifying ambiguous points would strengthen factual accuracy. (Claims checked: 17; supported by sources: 94%.)",
+  "issues": [
+    {
+      "id": "F1",
+      "category": "gap",
+      "severity": "high",
+      "section_id": "s2",
+      "description": "Missing explicit definition of idempotence for POST (though implied)",
+      "evidence": "S2",
+      "suggestion": "Add statement that POST is not idempotent with citation",
+      "origin": "llm"
+    },
+    {
+      "id": "F2",
+      "category": "misleading",
+      "severity": "medium",
+      "section_id": "s2",
+      "description": "Claim that GET is ideal for bookmarking and caching is not explicitly supported by cited sources",
+      "evidence": "S1",
+      "suggestion": "Add citation to caching behavior or rephrase",
+      "origin": "llm"
+    },
+    {
+      "id": "F3",
+      "category": "citation",
+      "severity": "medium",
+      "section_id": "s2",
+      "description": "Content-Type header claim lacks direct citation",
+      "evidence": "S4",
+      "suggestion": "Provide explicit source stating Content-Type is required for POST bodies",
+      "origin": "llm"
+    },
+    {
+      "id": "F4",
+      "category": "process",
+      "severity": "low",
+      "section_id": null,
+      "description": "Independent web verification step failed (Gemini rate limit / quota exceeded (HTTP 429). Wait a minute and press Retry.); verdicts rely on source excerpts only.",
+      "evidence": "",
+      "suggestion": "Re-run QC1 later.",
+      "origin": "rule"
+    },
+    {
+      "id": "F5",
+      "category": "inconsistency",
+      "severity": "low",
+      "section_id": "s4",
+      "description": "Example 3 shows 400 Bad Request but does not explain why (invalid data)",
+      "evidence": "S5",
+      "suggestion": "Clarify that server rejected due to missing required fields",
+      "origin": "llm"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "GET requests are safe and idempotent",
+      "section_id": "s2",
+      "cited": [
+        "S1",
+        "S2"
+      ],
+      "verdict": "supported",
+      "note": "MDN sources state GET is safe and idempotent",
+      "verified_by": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "claim": "GET requests should not contain a body",
+      "section_id": "s2",
+      "cited": [
+        "S1",
+        "S2"
+      ],
+      "verdict": "supported",
+      "note": "MDN explicitly says GET should not contain a body",
+      "verified_by": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "claim": "GET parameters are placed in the query string",
+      "section_id": "s2",
+      "cited": [
+        "S1"
+      ],
+      "verdict": "supported",
+      "note": "MDN example shows query string usage",
+      "verified_by": [
+        "S1"
+      ]
+    },
+    {
+      "claim": "GET is ideal for reading data, bookmarking, and caching",
+      "section_id": "s2",
+      "cited": [
+        "S1"
+      ],
+      "verdict": "partially_supported",
+      "note": "MDN mentions reading data; bookmarking and caching are common but not explicitly stated",
+      "verified_by": [
+        "S1"
+      ]
+    },
+    {
+      "claim": "POST is not safe and not idempotent",
+      "section_id": "s2",
+      "cited": [
+        "S2"
+      ],
+      "verdict": "supported",
+      "note": "MDN states POST is not safe nor idempotent",
+      "verified_by": [
+        "S2"
+      ]
+    },
+    {
+      "claim": "POST is used for creating resources, submitting forms, or any operation that changes state",
+      "section_id": "s2",
+      "cited": [
+        "S2"
+      ],
+      "verdict": "supported",
+      "note": "MDN describes POST for state-changing operations",
+      "verified_by": [
+        "S2"
+      ]
+    },
+    {
+      "claim": "Content-Type header is required for POST bodies",
+      "section_id": "s2",
+      "cited": [
+        "S4"
+      ],
+      "verdict": "partially_supported",
+      "note": "MDN notes Content-Type describes body; not strictly required but recommended",
+      "verified_by": [
+        "S4"
+      ]
+    },
+    {
+      "claim": "GET is safe and idempotent",
+      "section_id": "s6",
+      "cited": [
+        "S1"
+      ],
+      "verdict": "supported",
+      "note": "Quiz answer aligns with MDN",
+      "verified_by": [
+        "S1"
+      ]
+    },
+    {
+      "claim": "POST is used for actions that change server state",
+      "section_id": "s6",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "Answer key cites S5 which covers POST semantics",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "404 indicates the target URL does not exist",
+      "section_id": "s6",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 404 as Not Found",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "503 belongs to 5xx family and means service unavailable",
+      "section_id": "s6",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 503",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "201 response to POST indicates a new resource was created",
+      "section_id": "s6",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 201 Created",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "GET returns 200 OK for successful retrieval",
+      "section_id": "s4",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "Example shows 200",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "POST returns 201 Created for successful creation",
+      "section_id": "s4",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "Example shows 201",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "400 Bad Request indicates malformed client data",
+      "section_id": "s4",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 400",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "GET is safe and idempotent, POST is not safe nor idempotent",
+      "section_id": "s7",
+      "cited": [
+        "S1",
+        "S2"
+      ],
+      "verdict": "supported",
+      "note": "Summary repeats earlier claims",
+      "verified_by": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "claim": "Common codes include 200, 201, 400, 401, 404, 500, 503",
+      "section_id": "s7",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 lists these codes",
+      "verified_by": [
+        "S5"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "S1",
+      "tier": "A",
+      "relevance": "high",
+      "note": "MDN authoritative reference for GET semantics"
+    },
+    {
+      "source_id": "S2",
+      "tier": "A",
+      "relevance": "high",
+      "note": "MDN authoritative reference for HTTP methods"
+    },
+    {
+      "source_id": "S3",
+      "tier": "A",
+      "relevance": "medium",
+      "note": "General HTTP overview, not directly cited"
+    },
+    {
+      "source_id": "S4",
+      "tier": "A",
+      "relevance": "medium",
+      "note": "MDN reference for headers, used for Content-Type claim"
+    },
+    {
+      "source_id": "S5",
+      "tier": "A",
+      "relevance": "high",
+      "note": "RFC 7231 official standard for status codes"
+    },
+    {
+      "source_id": "S6",
+      "tier": "B",
+      "relevance": "low",
+      "note": "Wikipedia list, not directly cited"
+    },
+    {
+      "source_id": "S7",
+      "tier": "B",
+      "relevance": "low",
+      "note": "Wikipedia overview, not directly cited"
+    },
+    {
+      "source_id": "S8",
+      "tier": "C",
+      "relevance": "low",
+      "note": "MDN alternative source, not directly cited"
+    },
+    {
+      "source_id": "S9",
+      "tier": "C",
+      "relevance": "low",
+      "note": "Blog article, not directly cited"
+    }
+  ],
+  "objective_coverage": [],
+  "rubric": {},
+  "created_at": "2026-11-07T10:09:18+00:00"
+}

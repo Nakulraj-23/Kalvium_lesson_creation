@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>SQL Joins: Combining Data from Multiple Tables</title>
+<style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem;line-height:1.6;color:#1d1d1f}
+table{border-collapse:collapse;width:100%;margin:1rem 0}td,th{border:1px solid #ccc;padding:.4rem .6rem;text-align:left}th{background:#f3f3f3}
+pre{background:#f6f8fa;padding:1rem;overflow:auto;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace}
+h1{border-bottom:3px solid #333}h2{margin-top:2.2rem;border-bottom:1px solid #ddd}figure{margin:1rem 0}
+@media print{iframe{display:none}}</style></head><body><h1>SQL Joins: Combining Data from Multiple Tables</h1>
+<p><strong>Learning objective:</strong> Differentiate INNER JOIN, LEFT JOIN and FULL OUTER JOIN and choose the correct join to answer a given query.<br />
+<strong>Duration:</strong> 49 minutes (self-study or instructor-led)<br />
+<strong>Audience:</strong> Undergraduate students who know basic SELECT queries</p>
+<h3>By the end of this lesson you will be able to:</h3>
+<ul>
+<li><strong>O1</strong> Differentiate INNER JOIN, LEFT JOIN, and FULL OUTER JOIN semantics and results.</li>
+<li><strong>O2</strong> Select the appropriate join type to answer a specific query scenario.</li>
+<li><strong>O3</strong> Explain how NULL values and join order affect results and performance.</li>
+</ul>
+<h3>Lesson plan</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Section</th>
+<th>Type</th>
+<th>Minutes</th>
+<th>Objectives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Why do some rows disappear?</td>
+<td>hook</td>
+<td>3</td>
+<td>O1, O2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>INNER JOIN – matching rows only</td>
+<td>concept</td>
+<td>8</td>
+<td>O1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>LEFT (OUTER) JOIN – keep everything from the left</td>
+<td>concept</td>
+<td>8</td>
+<td>O1, O3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>FULL OUTER JOIN – keep everything from both sides</td>
+<td>concept</td>
+<td>6</td>
+<td>O1, O3</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Three‑table join and join order</td>
+<td>example</td>
+<td>6</td>
+<td>O2, O3</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Hands‑on: Choose the right join</td>
+<td>activity</td>
+<td>10</td>
+<td>O1, O2, O3</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Quiz – pick the right join</td>
+<td>knowledge check</td>
+<td>6</td>
+<td>O1, O2, O3</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Key takeaways &amp; common pitfalls</td>
+<td>summary</td>
+<td>2</td>
+<td>O1, O2, O3</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>49</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>1. Why do some rows disappear? (3 min)</h2>
+<p>You have two tables – <strong>students</strong> and <strong>enrollments</strong>. Running <code>SELECT * FROM students;</code> shows 120 rows, but <code>SELECT * FROM students JOIN enrollments ON students.id = enrollments.student_id;</code> returns only 95 rows. <em>What happened to the missing 25 students?</em> This puzzle introduces the idea that different joins keep or discard rows.</p>
+<h2>2. INNER JOIN – matching rows only (8 min)</h2>
+<p>An <strong>INNER JOIN</strong> returns rows where the join condition is true for both tables. The syntax is:</p>
+<pre><code class="language-sql">SELECT …
+FROM table1
+INNER JOIN table2 ON table1.col = table2.col;
+</code></pre>
+<p>PostgreSQL describes this as combining rows that satisfy the expression [1]. The join is evaluated left‑to‑right unless parentheses change the order [2].</p>
+<p><strong>Analogy:</strong> Think of two circles overlapping; only the intersecting area (matching rows) is kept.</p>
+<table>
+<thead>
+<tr>
+<th>students.id</th>
+<th>name</th>
+<th>enrollments.course_id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Ana</td>
+<td>101</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Ben</td>
+<td>102</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<h2>3. LEFT (OUTER) JOIN – keep everything from the left (8 min)</h2>
+<p>A <strong>LEFT OUTER JOIN</strong> returns all rows from the left table and matching rows from the right; non‑matching right rows become <code>NULL</code>. Oracle defines it as preserving unmatched rows from the first table [3].</p>
+<pre><code class="language-sql">SELECT s.id, s.name, e.course_id
+FROM students s
+LEFT JOIN enrollments e ON s.id = e.student_id;
+</code></pre>
+<p>Rows without enrollments appear with <code>NULL</code> in <code>e.course_id</code>.</p>
+<p><strong>NULL handling:</strong> <code>NULL</code> never equals another <code>NULL</code>, so a left join can produce <code>NULL</code> values that must be considered in later calculations [4].</p>
+<h2>4. FULL OUTER JOIN – keep everything from both sides (6 min)</h2>
+<p>A <strong>FULL OUTER JOIN</strong> returns the union of a left and a right outer join: all rows from both tables, with <code>NULL</code> filling gaps where no match exists. PostgreSQL supports this join type [1].</p>
+<pre><code class="language-sql">SELECT s.id, e.course_id
+FROM students s
+FULL OUTER JOIN enrollments e ON s.id = e.student_id;
+</code></pre>
+<p>The result contains:
+* rows with both sides matched,
+* rows only in <code>students</code> (right side <code>NULL</code>),
+* rows only in <code>enrollments</code> (left side <code>NULL</code>).</p>
+<h2>5. Three‑table join and join order (6 min)</h2>
+<p>Suppose we also have a <strong>courses</strong> table.</p>
+<pre><code class="language-sql">SELECT s.name, c.title, e.grade
+FROM students s
+JOIN enrollments e ON s.id = e.student_id
+JOIN courses c ON e.course_id = c.id;
+</code></pre>
+<p>PostgreSQL evaluates joins left‑to‑right, but parentheses can be used to control the logical order [2]. This can affect performance because the optimizer may choose different join strategies [5].</p>
+<p><strong>What if we need all students and all courses, even if no enrollment exists?</strong></p>
+<pre><code class="language-sql">SELECT s.name, c.title, e.grade
+FROM students s
+FULL OUTER JOIN enrollments e ON s.id = e.student_id
+FULL OUTER JOIN courses c ON e.course_id = c.id;
+</code></pre>
+<h2>6. Hands‑on: Choose the right join (10 min)</h2>
+<ol>
+<li><strong>Setup</strong> (2 min) – Run the provided script to create <code>students</code>, <code>enrollments</code>, and <code>courses</code> with sample data.</li>
+<li><strong>Task 1</strong> (3 min) – Write a query that lists every student and the courses they are enrolled in; include students with no enrollments. (Use LEFT JOIN.)</li>
+<li><strong>Task 2</strong> (3 min) – Write a query that shows every course and any students enrolled; include courses with no students. (Use RIGHT JOIN or FULL OUTER JOIN.)</li>
+<li><strong>Task 3</strong> (2 min) – Explain how <code>NULL</code> appears in your results and why.
+<strong>Expected outcome:</strong> Two result sets matching the description, with <code>NULL</code> values where no match exists.</li>
+</ol>
+<h2>7. Quiz – pick the right join (6 min)</h2>
+<ol>
+<li>Which join returns only rows that have matching keys in <em>both</em> tables?
+   - A) LEFT JOIN  B) INNER JOIN  C) FULL OUTER JOIN</li>
+<li>You need a list of all employees and any department they belong to; some employees have no department. Which join?
+   - A) INNER  B) LEFT  C) RIGHT</li>
+<li>After a LEFT JOIN, a column from the right table shows <code>NULL</code>. What does this indicate?
+   - A) The left table row had no match  B) The right table column is actually NULL  C) The join failed</li>
+<li>Which statement about join order is true?
+   - A) JOINs are always evaluated left‑to‑right regardless of parentheses.
+   - B) Parentheses can change the logical order and affect performance.
+   - C) The order never matters for result correctness.</li>
+<li>Full outer join is NOT supported natively in MySQL. How can you emulate it?
+   - A) Use UNION of LEFT and RIGHT joins  B) Use CROSS JOIN  C) It cannot be emulated.</li>
+</ol>
+<p><strong>Answer key</strong>
+1. B – INNER JOIN returns only matching rows [1].
+2. B – LEFT JOIN keeps all left‑side rows [3].
+3. A – <code>NULL</code> means no matching right‑side row [4].
+4. B – Parentheses control order and can influence optimizer choices [2][5].
+5. A – UNION of LEFT and RIGHT joins replicates FULL OUTER behavior.</p>
+<h2>8. Key takeaways &amp; common pitfalls (2 min)</h2>
+<ul>
+<li><strong>INNER</strong> = keep only matches.</li>
+<li><strong>LEFT</strong> = keep all left rows; unmatched right columns become <code>NULL</code>.</li>
+<li><strong>FULL</strong> = keep all rows from both sides; <code>NULL</code> fills gaps.</li>
+<li><strong>NULL</strong> never matches another <code>NULL</code>; test for it explicitly.</li>
+<li>Use parentheses to guide join order for performance, especially with three+ tables.</li>
+<li>Common mistake: assuming a LEFT JOIN will remove rows – it never does.</li>
+</ul>
+<h2>Supplementary videos (optional, not counted in the 45 minutes)</h2>
+<ul>
+<li><strong><a href="https://www.youtube.com/watch?v=K9Y8P3X45kE">SQL JOINs | INNER vs LEFT vs RIGHT vs FULL OUTER | Clearly Explained | Beginners Start Here!</a></strong> - Maven Analytics, 9:19. Clear visual comparison of INNER, LEFT, and FULL OUTER joins. <em>Watch: after section s4.</em></li>
+<li><strong><a href="https://www.youtube.com/watch?v=KTvYHEntvn8">Inner Join, Left Join, Right Join and Full Outer Join in SQL Server | SQL Server Joins</a></strong> - Questpond, 8:11. Demonstrates practical scenarios for choosing joins. <em>Watch: after activity s6.</em></li>
+</ul>
+<h2>Watch</h2><figure><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/K9Y8P3X45kE" title="SQL JOINs | INNER vs LEFT vs RIGHT vs FULL OUTER | Clearly Explained | Beginners Start Here!" frameborder="0" allowfullscreen></iframe><figcaption>SQL JOINs | INNER vs LEFT vs RIGHT vs FULL OUTER | Clearly Explained | Beginners Start Here! - Maven Analytics</figcaption></figure><figure><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/KTvYHEntvn8" title="Inner Join, Left Join, Right Join and Full Outer Join in SQL Server | SQL Server Joins" frameborder="0" allowfullscreen></iframe><figcaption>Inner Join, Left Join, Right Join and Full Outer Join in SQL Server | SQL Server Joins - Questpond</figcaption></figure><h2>References</h2>
+<ol>
+<li>PostgreSQL: Documentation: 18: 2.6. Joins Between Tables. <em>postgresql.org</em>. https://www.postgresql.org/docs/current/tutorial-join.html</li>
+<li>PostgreSQL: Documentation: 18: 7.2. Table Expressions. <em>postgresql.org</em>. https://www.postgresql.org/docs/current/queries-table-expressions.html</li>
+<li>LEFT OUTER JOIN operation - Oracle. <em>docs.oracle.com</em>. https://docs.oracle.com/javadb/10.8.3.0/ref/rrefsqlj18922.html</li>
+<li>Join (SQL) - Wikipedia. <em>wikipedia.org</em>. https://en.wikipedia.org/wiki/Join_(SQL)</li>
+<li>Joins - docs.oracle.com. <em>docs.oracle.com</em>. https://docs.oracle.com/en/database/oracle/oracle-database/26/sqlrf/Joins.html</li>
+</ol>
+<h3>Books (further reading)</h3>
+<ul>
+<li>Learning PHP, MySQL &amp; JavaScript - Robin Nixon (2009). https://openlibrary.org/works/OL9559525W</li>
+</ul>
+<h3>Videos</h3>
+<ul>
+<li>SQL JOINs | INNER vs LEFT vs RIGHT vs FULL OUTER | Clearly Explained | Beginners Start Here! - Maven Analytics (9:19). https://www.youtube.com/watch?v=K9Y8P3X45kE</li>
+<li>Inner Join, Left Join, Right Join and Full Outer Join in SQL Server | SQL Server Joins - Questpond (8:11). https://www.youtube.com/watch?v=KTvYHEntvn8</li>
+</ul></body></html>

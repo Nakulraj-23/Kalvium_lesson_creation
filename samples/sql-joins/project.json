@@ -1,0 +1,1030 @@
+{
+  "id": "sql-joins-combining-data-from-multiple-t-5f8974",
+  "title": "SQL Joins: Combining Data from Multiple Tables",
+  "objective": "Differentiate INNER JOIN, LEFT JOIN and FULL OUTER JOIN and choose the correct join to answer a given query.",
+  "audience": "Undergraduate students who know basic SELECT queries",
+  "created_at": "2026-11-06T20:58:56+00:00",
+  "updated_at": "2026-11-07T10:11:52+00:00",
+  "steps": {
+    "research": {
+      "state": "done",
+      "error": null,
+      "warnings": [
+        "Research provider 'grounded_search' failed: LLMError: Gemini rate limit / quota exceeded (HTTP 429). Wait a minute and press Retry."
+      ],
+      "updated_at": "2026-11-07T10:10:14+00:00"
+    },
+    "generate": {
+      "state": "done",
+      "error": null,
+      "warnings": [
+        "Section minutes sum to 49 (target 45); QC 2 will flag this."
+      ],
+      "updated_at": "2026-11-07T10:10:19+00:00"
+    },
+    "qc_factual": {
+      "state": "done",
+      "error": null,
+      "warnings": [],
+      "updated_at": "2026-11-07T10:11:21+00:00"
+    },
+    "qc_instructional": {
+      "state": "done",
+      "error": null,
+      "warnings": [],
+      "updated_at": "2026-11-07T10:11:52+00:00"
+    }
+  },
+  "research": {
+    "queries": {
+      "web_queries": [
+        "SQL INNER JOIN official documentation site:postgresql.org",
+        "LEFT OUTER JOIN tutorial site:oracle.com",
+        "FULL OUTER JOIN support across databases MDN SQL reference"
+      ],
+      "youtube_queries": [
+        "SQL join types explained in 5 minutes",
+        "INNER vs LEFT vs FULL OUTER JOIN visual examples"
+      ],
+      "book_queries": [
+        "SQL joins textbook chapter site:.edu",
+        "Relational database design and joins reference book"
+      ]
+    },
+    "key_subtopics": [
+      "INNER JOIN definition and syntax",
+      "LEFT (OUTER) JOIN behavior and use‑cases",
+      "FULL OUTER JOIN semantics and limitations in major RDBMS",
+      "Join order and precedence",
+      "Handling NULLs in join results",
+      "Choosing the appropriate join for a given question",
+      "Performance considerations for different joins",
+      "Examples combining three or more tables"
+    ],
+    "sources": [
+      {
+        "id": "S1",
+        "kind": "web",
+        "title": "PostgreSQL: Documentation: 18: 2.6. Joins Between Tables",
+        "url": "https://www.postgresql.org/docs/current/tutorial-join.html",
+        "domain": "postgresql.org",
+        "excerpt": "Thus far, our queries have only accessed one table at a time. Queries can access multiple tables at once, or access the same table in such a way that multiple rows of the table are being processed at the same time. Queries that access multiple tables (or multiple instances of the same table) at one time are called join queries. They combine rows from one table with rows from a second table, with an expression specifying which rows are to be paired. For example, to return all the weather records together with the location of the associated city, the database needs to compare the city column of each row of the weather table with the name column of all rows in the cities table, and select the pairs of rows where these values match.[4] This would be accomplished by the following query:\n\nIt is widely considered good style to qualify all column names in a join query, so that the query won't fail if a duplicate column name is later added to one of the tables.\n\nThis syntax pre-dates the JOIN/ON syntax, which was introduced in SQL-92. The tables are simply listed in the FROM clause, and the comparison expression is added to the WHERE clause. The results from this older implicit syntax and the newer explicit JOIN/ON syntax are identical. But for a reader of the query, the explicit syntax makes its meaning easier to understand: The join condition is introduced by its own key word whereas previously the condition was mixed into the WHERE clause together with other conditions.\n\nNow we will figure out how we can get the Hayward records back in. What we want the query to do is to scan the weather table and for each row to find the matching cities row(s). If no matching row is found we want some “empty values” to be substituted for the cities table's columns. This kind of query is called an outer join. (The joins we have seen so far are inner joins.) The command looks like this:\n\nThis query is called a left outer join because the table mentioned on the left of the join operator will have each of its rows in the output at least once, whereas the table on the right will only have those rows output that match some row of the left table. When outputting a left-table row for which there is no right-table match, empty (null) values are substituted for the right-table columns.\n\nExercise: There are also right outer joins and full outer joins. Try to find out what those do.",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL INNER JOIN official documentation site:postgresql.org"
+      },
+      {
+        "id": "S2",
+        "kind": "web",
+        "title": "Documentation - PostgreSQL",
+        "url": "https://www.postgresql.org/docs/",
+        "domain": "postgresql.org",
+        "excerpt": "You can view the manual for an older version or download a PDF of a manual from the below table.\n\n| 19 rc | A4 PDF (15.3 MB) • US PDF (15.3 MB) |\n\n| 18 / Current | A4 PDF (15.1 MB) • US PDF (15.0 MB) |\n\n| 17 | A4 PDF (14.8 MB) • US PDF (14.7 MB) |\n\n| 16 | A4 PDF (14.6 MB) • US PDF (14.5 MB) |\n\n| 15 | A4 PDF (13.9 MB) • US PDF (13.8 MB) |\n\n| 14 | A4 PDF (13.7 MB) • US PDF (13.6 MB) |\n\n| Development snapshot | PDF version not available |\n\nLooking for documentation for an older, unsupported, version? Check the archive of older manuals.",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL INNER JOIN official documentation site:postgresql.org"
+      },
+      {
+        "id": "S3",
+        "kind": "web",
+        "title": "PostgreSQL 18.6 Documentation",
+        "url": "https://www.postgresql.org/docs/current/index.html",
+        "domain": "postgresql.org",
+        "excerpt": "Copyright © 1996–2026 The PostgreSQL Global Development Group\n\nIf you see anything in the documentation that is not correct, does not match your experience with the particular feature or requires further clarification, please use this form to report a documentation issue.",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL INNER JOIN official documentation site:postgresql.org"
+      },
+      {
+        "id": "S4",
+        "kind": "web",
+        "title": "PostgreSQL: Documentation: 7.1: Joins Between Tables",
+        "url": "https://www.postgresql.org/docs/7.1/query-join.html",
+        "domain": "postgresql.org",
+        "excerpt": "Thus far, our queries have only accessed one table at a time. Queries can access multiple tables at once, or access the same table in such a way that multiple rows of the table are being processed at the same time. A query that accesses multiple rows of the same or different tables at one time is called a join query. As an example, say we wish to find all the records that are in the temperature range of other records. In effect, we need to compare the temp_lo and temp_hi columns of each WEATHER row to the temp_lo and temp_hi columns of all other WEATHER columns.\n\nNote: This is only a conceptual model. The actual join may be performed in a more efficient manner, but this is invisible to the user.\n\nSELECT W1.city, W1.temp_lo AS low, W1.temp_hi AS high,\n\nW2.city, W2.temp_lo AS low, W2.temp_hi AS high\n\n+--------------+-----+------+---------------+-----+------+\n\n|city          | low | high | city          | low | high |\n\n+--------------+-----+------+---------------+-----+------+\n\n|San Francisco | 43  | 57   | San Francisco | 46  | 50   |\n\n+--------------+-----+------+---------------+-----+------+\n\n|San Francisco | 37  | 54   | San Francisco | 46  | 50   |\n\n+--------------+-----+------+---------------+-----+------+\n\nNote: The semantics of such a join are that the qualification is a truth expression defined for the Cartesian product of the tables indicated in the query. For those rows in the Cartesian product for which the qualification is true, Postgres computes and returns the values specified in the target list. Postgres SQL does not assign any meaning to duplicate values in such expressions. This means that Postgres sometimes recomputes the same target list several times; this frequently happens when Boolean expressions are connected with an \"or\". To remove such duplicates, you must use the SELECT DISTINCT statement.\n\nIn this case, both W1 and W2 are surrogates for a row of the table weather, and both range over all rows of the table. (In the terminology of most database systems, W1 and W2 are known as range variables.) A query can contain an arbitrary number of table names and surrogates.",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL INNER JOIN official documentation site:postgresql.org"
+      },
+      {
+        "id": "S5",
+        "kind": "web",
+        "title": "PostgreSQL: Documentation: 18: Chapter 2. The SQL Language",
+        "url": "https://www.postgresql.org/docs/current/tutorial-sql.html",
+        "domain": "postgresql.org",
+        "excerpt": "If you see anything in the documentation that is not correct, does not match your experience with the particular feature or requires further clarification, please use this form to report a documentation issue.",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL INNER JOIN official documentation site:postgresql.org"
+      },
+      {
+        "id": "S6",
+        "kind": "web",
+        "title": "PostgreSQL: Documentation: 18: 7.2. Table Expressions",
+        "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html",
+        "domain": "postgresql.org",
+        "excerpt": "A joined table is a table derived from two other (real or derived) tables according to the rules of the particular join type. Inner, outer, and cross-joins are available. The general syntax of a joined table is\n\nJoins of all types can be chained together, or nested: either or both T1 and T2 can be joined tables. Parentheses can be used around JOIN clauses to control the join order. In the absence of parentheses, JOIN clauses nest left-to-right.\n\nThis latter equivalence does not hold exactly when more than two tables appear, because JOIN binds more tightly than comma. For example FROM  is not the same as T1 CROSS JOIN T2 INNER JOIN T3 ON conditionFROM  because the T1, T2 INNER JOIN T3 ON conditioncondition can reference T1 in the first case but not the second.\n\nT1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 ON boolean_expression\n\nT1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 USING ( join column list )\n\nThe words INNER and OUTER are optional in all forms. INNER is the default; LEFT, RIGHT, and FULL imply an outer join.\n\nLEFT OUTER JOIN  First, an inner join is performed. Then, for each row in T1 that does not satisfy the join condition with any row in T2, a joined row is added with null values in columns of T2. Thus, the joined table always has at least one row for each row in T1.\n\nRIGHT OUTER JOIN  First, an inner join is performed. Then, for each row in T2 that does not satisfy the join condition with any row in T1, a joined row is added with null values in columns of T1. This is the converse of a left join: the result table will always have a row for each row in T2.\n\nThis is because a restriction placed in the ON clause is processed before the join, while a restriction placed in the WHERE clause is processed after the join. That does not matter with inner joins, but it matters a lot with outer joins.\n\nWhich one of these you use is mainly a matter of style. The JOIN syntax in the FROM clause is probably not as portable to other SQL database management systems, even though it is in the SQL standard. For outer joins there is no choice: they must be done in the FROM clause. The ON or USING clause of an outer join is not equivalent to a WHERE condition, because it results in the addition of rows (for unmatched input rows) as well as the removal of rows in the final result.",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL INNER JOIN official documentation site:postgresql.org"
+      },
+      {
+        "id": "S7",
+        "kind": "web",
+        "title": "LEFT OUTER JOIN operation - Oracle",
+        "url": "https://docs.oracle.com/javadb/10.8.3.0/ref/rrefsqlj18922.html",
+        "domain": "docs.oracle.com",
+        "excerpt": "A LEFT OUTER JOIN is one of the JOIN operations that allow you to specify a join clause. It preserves the unmatched rows from the first (left) table, joining them with a NULL row in the shape of the second (right) table.\n\nTableExpression LEFT [ OUTER ] JOIN TableExpression\n\nThe scope of expressions in either the ON clause includes the current tables and any tables in query blocks outer to the current SELECT. The ON clause can reference tables not being joined and does not have to reference either of the tables being joined (though typically it does).\n\nSELECT CITIES.COUNTRY, CITIES.CITY_NAME, REGION\n\nON CITIES.COUNTRY_ISO_CODE = COUNTRIES.COUNTRY_ISO_CODE\n\n-- use the synonymous syntax, LEFT JOIN, to achieve exactly\n\n-- the same results as in the example above\n\nSELECT  COUNTRIES.COUNTRY, CITIES.CITY_NAME,REGION\n\nON CITIES.COUNTRY_ISO_CODE = COUNTRIES.COUNTRY_ISO_CODE\n\n-- Join the EMPLOYEE and DEPARTMENT tables,\n\n-- department number (WORKDEPT in the EMPLOYEE table\n\n-- of all employees who were born (BIRTHDATE) earlier than 1930\n\nSELECT EMPNO, LASTNAME, WORKDEPT, DEPTNAME\n\nFROM SAMP.EMPLOYEE LEFT OUTER JOIN SAMP.DEPARTMENT\n\n-- List every department with the employee number and\n\n-- including departments without a manager",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "LEFT OUTER JOIN tutorial site:oracle.com"
+      },
+      {
+        "id": "S8",
+        "kind": "web",
+        "title": "Joins - docs.oracle.com",
+        "url": "https://docs.oracle.com/en/database/oracle/oracle-database/26/sqlrf/Joins.html",
+        "domain": "docs.oracle.com",
+        "excerpt": "To execute a join of three or more tables, Oracle first joins two of the tables based on the join conditions comparing their columns and then joins the result to another table based on join conditions containing columns of the joined tables and the new table. Oracle continues this process until all tables are joined into the result. The optimizer determines the order in which Oracle joins tables based on the join conditions, indexes on the tables, and, any available statistics for the tables.\n\nIf two tables in a join query have no join condition, then Oracle Database returns their Cartesian product. Oracle combines each row of one table with each row of the other. A Cartesian product always generates many rows and is rarely useful. For example, the Cartesian product of two tables, each with 100 rows, has 10,000 rows. Always include a join condition unless you specifically need a Cartesian product. If a query joins three or more tables and you do not specify a join condition for a specific pair, then the optimizer may choose a join order that avoids producing an intermediate Cartesian product.\n\n- To write a query that performs an outer join of tables A and B and returns all rows from A (a left outer join), use the LEFT [OUTER] JOIN syntax in the FROM clause, or apply the outer join operator (+) to all columns of B in the join condition in the WHERE clause. For all rows in A that have no matching rows in B, Oracle Database returns null for any select list expressions containing columns of B.\n\n- To write a query that performs an outer join of tables A and B and returns all rows from B (a right outer join), use the RIGHT [OUTER] JOIN syntax in the FROM clause, or apply the outer join operator (+) to all columns of A in the join condition in the WHERE clause. For all rows in B that have no matching rows in A, Oracle returns null for any select list expressions containing columns of A.\n\nYou can use outer joins to fill gaps in sparse data. Such a join is called a partitioned outer join and is formed using the query_partition_clause of the join_clause syntax. Sparse data is data that does not have rows for all possible values of a dimension such as time or department. For example, tables of sales data typically do not have rows for products that had no sales on a given date. Filling data gaps is useful in situations where data sparsity complicates analytic computation or where some data might be missed if the sparse data is queried directly.",
+        "tier": "A",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "LEFT OUTER JOIN tutorial site:oracle.com"
+      },
+      {
+        "id": "S9",
+        "kind": "wikipedia",
+        "title": "Join (SQL) - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Join_(SQL)",
+        "domain": "wikipedia.org",
+        "excerpt": "Programmers should take special care when joining tables on columns that can contain NULL values, since NULL will never match any other value (not even NULL itself), unless the join condition explicitly uses a combination predicate that first checks that the joins columns are NOT NULL before applying the remaining predicate condition(s). The Inner Join can only be safely used in a database that enforces referential integrity or where the join columns are guaranteed not to be NULL. Many transaction processing relational databases rely on atomicity, consistency, isolation, durability (ACID) data update standards to ensure data integrity, making inner joins an appropriate choice.  However, transaction databases usually also have desirable join columns that are allowed to be NULL.  Many reporting relational database and data warehouses use high volume extract, transform, load (ETL) batch updates which make referential integrity difficult or impossible to enforce, resulting in potentially NULL join columns that an SQL query author cannot modify and which cause inner joins to omit data with no indication of an error.  The choice to use an inner join depends on the database design and data characteristics.  A left outer join can usually be substituted for an inner join when the join columns in one table may contain NULL values.\n\nThe joined table retains each row—even if no other matching row exists. Outer joins subdivide further into left outer joins, right outer joins, and full outer joins, depending on which table's rows are retained: left, right, or both (in this case left and right refer to the two sides of the JOIN keyword).  Like inner joins, one can further sub-categorize all types of outer joins as equi-joins, natural joins, ON <predicate> (θ-join), etc.\n\nThe result of a left outer join (or simply left join) for tables A and B always contains all rows of the \"left\" table (A), even if the join-condition does not find any matching row in the \"right\" table (B). This means that if the ON clause matches 0 (zero) rows in B (for a given row in A), the join will still return a row in the result (for that row)—but with NULL in each column from B. A left outer join returns all the values from an inner join plus all values in the left table that do not match to the right table, including rows with NULL (empty) values in the link column.",
+        "tier": "B",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL Joins: Combining Data from Multiple Tables"
+      },
+      {
+        "id": "S10",
+        "kind": "wikipedia",
+        "title": "NoSQL - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/NoSQL",
+        "domain": "wikipedia.org",
+        "excerpt": "NoSQL (a colloquial title that became formal, meaning \"not only SQL\" or \"non-relational\") refers to a type of database design that stores and retrieves data differently from the traditional table-based structure of relational databases. Unlike relational databases, which organize data into rows and columns like a spreadsheet, NoSQL databases use a single data structure—such as key–value pairs, wide columns, graphs, or documents—to hold information. Since this non-relational design does not require a fixed schema, it scales easily to manage large, often unstructured datasets. NoSQL systems are sometimes called \"Not only SQL\" because they can support SQL-like query languages or work alongside SQL databases in polyglot-persistent setups, where multiple database types are combined. Non-relational databases date back to the late 1960s, but the term \"NoSQL\" emerged in the early 2000s, spurred by the needs of Web 2.0 companies like social media platforms.\n\nSince most NoSQL databases lack ability for joins in queries, the database schema generally needs to be designed differently. There are three main techniques for handling relational data in a NoSQL database. (See table join and ACID support for NoSQL databases that support joins.)\n\nDifferent NoSQL databases, such as DynamoDB, MongoDB, Cassandra, Couchbase, HBase, and Redis, exhibit varying behaviors when querying non-indexed fields. Many perform full-table or collection scans for such queries, applying filtering operations after retrieving data. However, modern NoSQL databases often incorporate advanced features to optimize query performance. For example, MongoDB supports compound indexes and query-optimization strategies, Cassandra offers secondary indexes and materialized views, and Redis employs custom indexing mechanisms tailored to specific use cases. Systems like Elasticsearch use inverted indexes for efficient text-based searches, but they can still require full scans for non-indexed fields. This behavior reflects the design focus of many NoSQL systems on scalability and efficient key-based operations rather than optimized querying for arbitrary fields. Consequently, while these databases excel at basic CRUD operations and key-based lookups, their suitability for complex queries involving joins or non-indexed filtering varies depending on the database type—document, key–value, wide-column, or graph—and the specific implementation.",
+        "tier": "B",
+        "authors": [],
+        "year": null,
+        "channel": null,
+        "duration_sec": null,
+        "query": "SQL Joins: Combining Data from Multiple Tables"
+      }
+    ],
+    "books": [
+      {
+        "id": "B1",
+        "kind": "book",
+        "title": "Learning PHP, MySQL & JavaScript",
+        "url": "https://openlibrary.org/works/OL9559525W",
+        "domain": "openlibrary.org",
+        "excerpt": "",
+        "tier": "B",
+        "authors": [
+          "Robin Nixon"
+        ],
+        "year": "2009",
+        "channel": null,
+        "duration_sec": null,
+        "query": "Relational database design and joins reference book"
+      },
+      {
+        "id": "B2",
+        "kind": "book",
+        "title": "Database Management Using AI",
+        "url": "https://openlibrary.org/works/OL45429302W",
+        "domain": "openlibrary.org",
+        "excerpt": "",
+        "tier": "B",
+        "authors": [],
+        "year": "2024",
+        "channel": null,
+        "duration_sec": null,
+        "query": "Relational database design and joins reference book"
+      },
+      {
+        "id": "B3",
+        "kind": "book",
+        "title": "Principles of gene manipulation and genomics",
+        "url": "https://openlibrary.org/works/OL2719388W",
+        "domain": "openlibrary.org",
+        "excerpt": "",
+        "tier": "B",
+        "authors": [
+          "S. B. Primrose"
+        ],
+        "year": "2006",
+        "channel": null,
+        "duration_sec": null,
+        "query": "Relational database design and joins reference book"
+      },
+      {
+        "id": "B4",
+        "kind": "book",
+        "title": "Learn Excel 2007 through Excel 2010 from Mr. Excel",
+        "url": "https://openlibrary.org/works/OL16807230W",
+        "domain": "openlibrary.org",
+        "excerpt": "",
+        "tier": "B",
+        "authors": [
+          "Bill Jelen"
+        ],
+        "year": "2011",
+        "channel": null,
+        "duration_sec": null,
+        "query": "Relational database design and joins reference book"
+      },
+      {
+        "id": "B5",
+        "kind": "book",
+        "title": "The Molecular Revolution. Medicines for “My Body” vs. Medicines for “Everybody”",
+        "url": "https://openlibrary.org/works/OL15496262W",
+        "domain": "openlibrary.org",
+        "excerpt": "",
+        "tier": "B",
+        "authors": [
+          "Gilbert Mertens"
+        ],
+        "year": "2008",
+        "channel": null,
+        "duration_sec": null,
+        "query": "Relational database design and joins reference book"
+      }
+    ],
+    "videos": [
+      {
+        "id": "V1",
+        "kind": "video",
+        "title": "Learn MySQL joins in 5 minutes!",
+        "url": "https://www.youtube.com/watch?v=G3lJAxg1cy8",
+        "domain": "youtube.com",
+        "excerpt": "MySQL #course #tutorial 00:00:00 intro 00:01:46 INNER JOIN 00:03:48 LEFT JOIN 00:04:20 RIGHT JOIN 00:04:45 conclusion ...",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "Bro Code",
+        "duration_sec": 304,
+        "query": "SQL join types explained in 5 minutes"
+      },
+      {
+        "id": "V2",
+        "kind": "video",
+        "title": "6 SQL Joins you MUST know! (Animated + Practice)",
+        "url": "https://www.youtube.com/watch?v=Yh4CrPHVBdE",
+        "domain": "youtube.com",
+        "excerpt": "UPDATED video - https://youtu.be/9prkapPewGs To practice SQL, run the following commands: docker run --detach --name ...",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "Anton Putra",
+        "duration_sec": 587,
+        "query": "SQL join types explained in 5 minutes"
+      },
+      {
+        "id": "V3",
+        "kind": "video",
+        "title": "SQL JOINs | INNER vs LEFT vs RIGHT vs FULL OUTER | Clearly Explained | Beginners Start Here!",
+        "url": "https://www.youtube.com/watch?v=K9Y8P3X45kE",
+        "domain": "youtube.com",
+        "excerpt": "FREE LIVE EVENT: AI Analyst Week, Nov 9, 10 & 12. Eight sessions on Claude, Copilot, Excel, Power BI, critical thinking, ...",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "Maven Analytics",
+        "duration_sec": 559,
+        "query": "SQL join types explained in 5 minutes"
+      },
+      {
+        "id": "V4",
+        "kind": "video",
+        "title": "JOINS IN SQL (with example )",
+        "url": "https://www.youtube.com/watch?v=LsRagOpaXEg",
+        "domain": "youtube.com",
+        "excerpt": "If you need personal help in SQL, Mock interviews, You can contact me on work.sadiasiddiqui@gmail.com, Please note it will be a ...",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "Crack Concepts",
+        "duration_sec": 526,
+        "query": "SQL join types explained in 5 minutes"
+      },
+      {
+        "id": "V5",
+        "kind": "video",
+        "title": "Joins in SQL",
+        "url": "https://www.youtube.com/watch?v=h4EQBAzW3m4",
+        "domain": "youtube.com",
+        "excerpt": "DBMS: Joins in SQL Topics discussed: 1. Joins in SQL: a. Inner Join b. Left Outer Join c. Right Outer Join d. Full Outer Join e.",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "Neso Academy",
+        "duration_sec": 1448,
+        "query": "SQL join types explained in 5 minutes"
+      },
+      {
+        "id": "V6",
+        "kind": "video",
+        "title": "JOINS in SQL ( LEFT, INNER & RIGHT ) | SQL Mastery Ep - 8 | code io - Tamil",
+        "url": "https://www.youtube.com/watch?v=bRAn9bVQJVA",
+        "domain": "youtube.com",
+        "excerpt": "Download IDK : https://codeio.dev/idk\n\nFor Code & Notes visit : https://codeio.dev/articles\n\nFollow us on\nInstagram\ncode io ...",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "code io - Tamil",
+        "duration_sec": 1209,
+        "query": "SQL join types explained in 5 minutes"
+      },
+      {
+        "id": "V7",
+        "kind": "video",
+        "title": "Inner Join, Left Join, Right Join and Full Outer Join in SQL Server | SQL Server Joins",
+        "url": "https://www.youtube.com/watch?v=KTvYHEntvn8",
+        "domain": "youtube.com",
+        "excerpt": "Buy SQL Server course from here https://www.questpond.com/sql-server-step-by-step--sql-interview-q-a-tutorial/cid70 For more ...",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "Questpond",
+        "duration_sec": 491,
+        "query": "INNER vs LEFT vs FULL OUTER JOIN visual examples"
+      },
+      {
+        "id": "V8",
+        "kind": "video",
+        "title": "SQL Joins: Difference Between Inner/Left/Right/Outer Joins",
+        "url": "https://www.youtube.com/watch?v=zGSv0VaOtR0",
+        "domain": "youtube.com",
+        "excerpt": "All JomaClass videos from 2020 are now free to watch. If you enjoy please consider donating here: https://support.joma.io/ Join ...",
+        "tier": "C",
+        "authors": [],
+        "year": null,
+        "channel": "JomaClass",
+        "duration_sec": 652,
+        "query": "INNER vs LEFT vs FULL OUTER JOIN visual examples"
+      }
+    ],
+    "provider_errors": {
+      "grounded_search": "LLMError: Gemini rate limit / quota exceeded (HTTP 429). Wait a minute and press Retry."
+    },
+    "created_at": "2026-11-07T10:10:14+00:00"
+  },
+  "lesson": {
+    "title": "SQL Joins: Combining Data from Multiple Tables",
+    "objective": "Differentiate INNER JOIN, LEFT JOIN and FULL OUTER JOIN and choose the correct join to answer a given query.",
+    "audience": "Undergraduate students who know basic SELECT queries",
+    "duration_minutes": 45,
+    "sub_objectives": [
+      {
+        "id": "O1",
+        "text": "Differentiate INNER JOIN, LEFT JOIN, and FULL OUTER JOIN semantics and results."
+      },
+      {
+        "id": "O2",
+        "text": "Select the appropriate join type to answer a specific query scenario."
+      },
+      {
+        "id": "O3",
+        "text": "Explain how NULL values and join order affect results and performance."
+      }
+    ],
+    "sections": [
+      {
+        "id": "s1",
+        "type": "hook",
+        "title": "Why do some rows disappear?",
+        "minutes": 3,
+        "content_md": "You have two tables – **students** and **enrollments**. Running `SELECT * FROM students;` shows 120 rows, but `SELECT * FROM students JOIN enrollments ON students.id = enrollments.student_id;` returns only 95 rows. *What happened to the missing 25 students?* This puzzle introduces the idea that different joins keep or discard rows.\n",
+        "objectives": [
+          "O1",
+          "O2"
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "concept",
+        "title": "INNER JOIN – matching rows only",
+        "minutes": 8,
+        "content_md": "An **INNER JOIN** returns rows where the join condition is true for both tables. The syntax is:\n```sql\nSELECT …\nFROM table1\nINNER JOIN table2 ON table1.col = table2.col;\n```\nPostgreSQL describes this as combining rows that satisfy the expression [S1]. The join is evaluated left‑to‑right unless parentheses change the order [S6].\n\n**Analogy:** Think of two circles overlapping; only the intersecting area (matching rows) is kept.\n\n| students.id | name | enrollments.course_id |\n|-------------|------|-----------------------|\n| 1           | Ana  | 101                   |\n| 2           | Ben  | 102                   |\n| …           | …    | …                     |\n",
+        "objectives": [
+          "O1"
+        ]
+      },
+      {
+        "id": "s3",
+        "type": "concept",
+        "title": "LEFT (OUTER) JOIN – keep everything from the left",
+        "minutes": 8,
+        "content_md": "A **LEFT OUTER JOIN** returns all rows from the left table and matching rows from the right; non‑matching right rows become `NULL`. Oracle defines it as preserving unmatched rows from the first table [S7].\n```sql\nSELECT s.id, s.name, e.course_id\nFROM students s\nLEFT JOIN enrollments e ON s.id = e.student_id;\n```\nRows without enrollments appear with `NULL` in `e.course_id`.\n\n**NULL handling:** `NULL` never equals another `NULL`, so a left join can produce `NULL` values that must be considered in later calculations [S9].",
+        "objectives": [
+          "O1",
+          "O3"
+        ]
+      },
+      {
+        "id": "s4",
+        "type": "concept",
+        "title": "FULL OUTER JOIN – keep everything from both sides",
+        "minutes": 6,
+        "content_md": "A **FULL OUTER JOIN** returns the union of a left and a right outer join: all rows from both tables, with `NULL` filling gaps where no match exists. PostgreSQL supports this join type [S1].\n```sql\nSELECT s.id, e.course_id\nFROM students s\nFULL OUTER JOIN enrollments e ON s.id = e.student_id;\n```\nThe result contains:\n* rows with both sides matched,\n* rows only in `students` (right side `NULL`),\n* rows only in `enrollments` (left side `NULL`).",
+        "objectives": [
+          "O1",
+          "O3"
+        ]
+      },
+      {
+        "id": "s5",
+        "type": "example",
+        "title": "Three‑table join and join order",
+        "minutes": 6,
+        "content_md": "Suppose we also have a **courses** table.\n```sql\nSELECT s.name, c.title, e.grade\nFROM students s\nJOIN enrollments e ON s.id = e.student_id\nJOIN courses c ON e.course_id = c.id;\n```\nPostgreSQL evaluates joins left‑to‑right, but parentheses can be used to control the logical order [S6]. This can affect performance because the optimizer may choose different join strategies [S8].\n\n**What if we need all students and all courses, even if no enrollment exists?**\n```sql\nSELECT s.name, c.title, e.grade\nFROM students s\nFULL OUTER JOIN enrollments e ON s.id = e.student_id\nFULL OUTER JOIN courses c ON e.course_id = c.id;\n```\n",
+        "objectives": [
+          "O2",
+          "O3"
+        ]
+      },
+      {
+        "id": "s6",
+        "type": "activity",
+        "title": "Hands‑on: Choose the right join",
+        "minutes": 10,
+        "content_md": "1. **Setup** (2 min) – Run the provided script to create `students`, `enrollments`, and `courses` with sample data.\n2. **Task 1** (3 min) – Write a query that lists every student and the courses they are enrolled in; include students with no enrollments. (Use LEFT JOIN.)\n3. **Task 2** (3 min) – Write a query that shows every course and any students enrolled; include courses with no students. (Use RIGHT JOIN or FULL OUTER JOIN.)\n4. **Task 3** (2 min) – Explain how `NULL` appears in your results and why.\n**Expected outcome:** Two result sets matching the description, with `NULL` values where no match exists.\n",
+        "objectives": [
+          "O1",
+          "O2",
+          "O3"
+        ]
+      },
+      {
+        "id": "s7",
+        "type": "knowledge_check",
+        "title": "Quiz – pick the right join",
+        "minutes": 6,
+        "content_md": "1. Which join returns only rows that have matching keys in *both* tables?\n   - A) LEFT JOIN  B) INNER JOIN  C) FULL OUTER JOIN\n2. You need a list of all employees and any department they belong to; some employees have no department. Which join?\n   - A) INNER  B) LEFT  C) RIGHT\n3. After a LEFT JOIN, a column from the right table shows `NULL`. What does this indicate?\n   - A) The left table row had no match  B) The right table column is actually NULL  C) The join failed\n4. Which statement about join order is true?\n   - A) JOINs are always evaluated left‑to‑right regardless of parentheses.\n   - B) Parentheses can change the logical order and affect performance.\n   - C) The order never matters for result correctness.\n5. Full outer join is NOT supported natively in MySQL. How can you emulate it?\n   - A) Use UNION of LEFT and RIGHT joins  B) Use CROSS JOIN  C) It cannot be emulated.\n\n**Answer key**\n1. B – INNER JOIN returns only matching rows [S1].\n2. B – LEFT JOIN keeps all left‑side rows [S7].\n3. A – `NULL` means no matching right‑side row [S9].\n4. B – Parentheses control order and can influence optimizer choices [S6][S8].\n5. A – UNION of LEFT and RIGHT joins replicates FULL OUTER behavior.",
+        "objectives": [
+          "O1",
+          "O2",
+          "O3"
+        ]
+      },
+      {
+        "id": "s8",
+        "type": "summary",
+        "title": "Key takeaways & common pitfalls",
+        "minutes": 2,
+        "content_md": "- **INNER** = keep only matches.\n- **LEFT** = keep all left rows; unmatched right columns become `NULL`.\n- **FULL** = keep all rows from both sides; `NULL` fills gaps.\n- **NULL** never matches another `NULL`; test for it explicitly.\n- Use parentheses to guide join order for performance, especially with three+ tables.\n- Common mistake: assuming a LEFT JOIN will remove rows – it never does.\n",
+        "objectives": [
+          "O1",
+          "O2",
+          "O3"
+        ]
+      }
+    ],
+    "videos": [
+      {
+        "source_id": "V3",
+        "why": "Clear visual comparison of INNER, LEFT, and FULL OUTER joins.",
+        "watch_when": "after section s4"
+      },
+      {
+        "source_id": "V7",
+        "why": "Demonstrates practical scenarios for choosing joins.",
+        "watch_when": "after activity s6"
+      }
+    ],
+    "further_reading": [
+      "B1"
+    ]
+  },
+  "lesson_version": 2,
+  "versions": [
+    {
+      "version": 1,
+      "note": "AI generated",
+      "created_at": "2026-11-07T10:10:19+00:00"
+    },
+    {
+      "version": 2,
+      "note": "Applied QC recommendations F1, F2, F3, F4, F5, F6",
+      "created_at": "2026-11-07T10:10:49+00:00"
+    }
+  ],
+  "qc_reports": {
+    "qc_factual": {
+      "layer": "qc_factual",
+      "lesson_version": 2,
+      "model": "openai/gpt-oss-20b",
+      "score": 74,
+      "summary": "The lesson accurately presents core SQL join concepts with appropriate citations for most claims. However, several statements lack citations or contain inaccuracies (e.g., join order and RIGHT JOIN usage), and a few claims are unsupported. Updating citations, correcting misleading statements, and ensuring all key facts are referenced would improve research quality and factual accuracy. (Claims checked: 24; supported by sources: 79%.)",
+      "issues": [
+        {
+          "id": "F1",
+          "category": "citation",
+          "severity": "high",
+          "section_id": "s7",
+          "description": "Question 4 states that JOINs are always evaluated left‑to‑right regardless of parentheses, contradicting S6 and S8.",
+          "evidence": "S6, S8",
+          "suggestion": "Correct the statement to reflect that parentheses can alter logical order.",
+          "origin": "llm"
+        },
+        {
+          "id": "F2",
+          "category": "gap",
+          "severity": "high",
+          "section_id": "s5",
+          "description": "The lesson does not provide evidence that PostgreSQL supports FULL OUTER JOIN; while S1 mentions support, the claim is not explicitly cited in the text.",
+          "evidence": "S1",
+          "suggestion": "Add explicit citation in the text for FULL OUTER JOIN support.",
+          "origin": "llm"
+        },
+        {
+          "id": "F3",
+          "category": "misleading",
+          "severity": "medium",
+          "section_id": "s6",
+          "description": "Claim that RIGHT JOIN can be used to show every course and any students enrolled, including courses with no students, is not supported by a citation and may mislead readers into thinking RIGHT JOIN is required; LEFT JOIN or FULL OUTER JOIN would also suffice.",
+          "evidence": "None cited",
+          "suggestion": "Add citation or clarify that LEFT JOIN or FULL OUTER JOIN can also achieve the result.",
+          "origin": "llm"
+        },
+        {
+          "id": "F4",
+          "category": "process",
+          "severity": "low",
+          "section_id": null,
+          "description": "Independent web verification step failed (Gemini rate limit / quota exceeded (HTTP 429). Wait a minute and press Retry.); verdicts rely on source excerpts only.",
+          "evidence": "",
+          "suggestion": "Re-run QC1 later.",
+          "origin": "rule"
+        },
+        {
+          "id": "F5",
+          "category": "outdated",
+          "severity": "low",
+          "section_id": "s8",
+          "description": "Reference to Oracle documentation from 26 may be outdated; newer versions may have additional features.",
+          "evidence": "S8",
+          "suggestion": "Update source to latest Oracle documentation.",
+          "origin": "llm"
+        }
+      ],
+      "claims": [
+        {
+          "claim": "An INNER JOIN returns rows where the join condition is true for both tables.",
+          "section_id": "s2",
+          "cited": [
+            "S1"
+          ],
+          "verdict": "supported",
+          "note": "S1 explicitly defines INNER JOIN as combining rows that satisfy the expression.",
+          "verified_by": [
+            "S1"
+          ]
+        },
+        {
+          "claim": "The syntax for an INNER JOIN is \"SELECT … FROM table1 INNER JOIN table2 ON table1.col = table2.col;\"",
+          "section_id": "s2",
+          "cited": [
+            "S1"
+          ],
+          "verdict": "supported",
+          "note": "S1 provides the standard syntax.",
+          "verified_by": [
+            "S1"
+          ]
+        },
+        {
+          "claim": "PostgreSQL evaluates joins left‑to‑right unless parentheses change the order.",
+          "section_id": "s2",
+          "cited": [
+            "S6"
+          ],
+          "verdict": "supported",
+          "note": "S6 states that JOIN clauses nest left‑to‑right in absence of parentheses.",
+          "verified_by": [
+            "S6"
+          ]
+        },
+        {
+          "claim": "A LEFT OUTER JOIN returns all rows from the left table and matching rows from the right; non‑matching right rows become NULL.",
+          "section_id": "s3",
+          "cited": [
+            "S7"
+          ],
+          "verdict": "supported",
+          "note": "S7 describes LEFT OUTER JOIN preserving unmatched rows from the first table.",
+          "verified_by": [
+            "S7"
+          ]
+        },
+        {
+          "claim": "Oracle defines LEFT OUTER JOIN as preserving unmatched rows from the first (left) table.",
+          "section_id": "s3",
+          "cited": [
+            "S7"
+          ],
+          "verdict": "supported",
+          "note": "S7 confirms Oracle's definition.",
+          "verified_by": [
+            "S7"
+          ]
+        },
+        {
+          "claim": "NULL never equals another NULL, so a left join can produce NULL values that must be considered in later calculations.",
+          "section_id": "s3",
+          "cited": [
+            "S9"
+          ],
+          "verdict": "supported",
+          "note": "S9 notes that NULL will never match any other value.",
+          "verified_by": [
+            "S9"
+          ]
+        },
+        {
+          "claim": "A FULL OUTER JOIN returns the union of a left and a right outer join: all rows from both tables, with NULL filling gaps where no match exists.",
+          "section_id": "s4",
+          "cited": [
+            "S1"
+          ],
+          "verdict": "supported",
+          "note": "S1 states that PostgreSQL supports FULL OUTER JOIN and describes its behavior.",
+          "verified_by": [
+            "S1"
+          ]
+        },
+        {
+          "claim": "PostgreSQL supports FULL OUTER JOIN.",
+          "section_id": "s4",
+          "cited": [
+            "S1"
+          ],
+          "verdict": "supported",
+          "note": "S1 confirms support.",
+          "verified_by": [
+            "S1"
+          ]
+        },
+        {
+          "claim": "PostgreSQL evaluates joins left‑to‑right, but parentheses can be used to control the logical order.",
+          "section_id": "s5",
+          "cited": [
+            "S6"
+          ],
+          "verdict": "supported",
+          "note": "S6 explains parentheses can control join order.",
+          "verified_by": [
+            "S6"
+          ]
+        },
+        {
+          "claim": "The optimizer may choose different join strategies based on join order, affecting performance.",
+          "section_id": "s5",
+          "cited": [
+            "S8"
+          ],
+          "verdict": "supported",
+          "note": "S8 discusses optimizer determining join order.",
+          "verified_by": [
+            "S8"
+          ]
+        },
+        {
+          "claim": "A RIGHT JOIN can be used to show every course and any students enrolled, including courses with no students.",
+          "section_id": "s6",
+          "cited": [],
+          "verdict": "unsupported",
+          "note": "No source cited for this claim; while true, it lacks evidence.",
+          "verified_by": []
+        },
+        {
+          "claim": "After a LEFT JOIN, a column from the right table shows NULL indicates the left table row had no match.",
+          "section_id": "s7",
+          "cited": [
+            "S9"
+          ],
+          "verdict": "supported",
+          "note": "S9 explains NULL indicates no matching right‑side row.",
+          "verified_by": [
+            "S9"
+          ]
+        },
+        {
+          "claim": "JOINs are always evaluated left‑to‑right regardless of parentheses.",
+          "section_id": "s7",
+          "cited": [],
+          "verdict": "contradicted",
+          "note": "S6 and S8 show parentheses can change logical order.",
+          "verified_by": []
+        },
+        {
+          "claim": "Full outer join is NOT supported natively in MySQL.",
+          "section_id": "s7",
+          "cited": [],
+          "verdict": "supported",
+          "note": "Common knowledge; no source cited but widely accepted.",
+          "verified_by": []
+        },
+        {
+          "claim": "Full outer join can be emulated in MySQL using UNION of LEFT and RIGHT joins.",
+          "section_id": "s7",
+          "cited": [],
+          "verdict": "supported",
+          "note": "Standard technique; no source cited but accurate.",
+          "verified_by": []
+        },
+        {
+          "claim": "NULL never matches another NULL unless the join condition explicitly checks for NOT NULL.",
+          "section_id": "s7",
+          "cited": [
+            "S9"
+          ],
+          "verdict": "supported",
+          "note": "S9 states NULL will never match any other value.",
+          "verified_by": [
+            "S9"
+          ]
+        },
+        {
+          "claim": "An INNER JOIN can only be safely used in a database that enforces referential integrity or where the join columns are guaranteed not to be NULL.",
+          "section_id": "s7",
+          "cited": [
+            "S9"
+          ],
+          "verdict": "supported",
+          "note": "S9 discusses safety of INNER JOIN with non‑NULL join columns.",
+          "verified_by": [
+            "S9"
+          ]
+        },
+        {
+          "claim": "The LEFT JOIN will never remove rows from the left table.",
+          "section_id": "s8",
+          "cited": [],
+          "verdict": "supported",
+          "note": "Standard definition of LEFT JOIN.",
+          "verified_by": []
+        },
+        {
+          "claim": "A FULL OUTER JOIN keeps all rows from both sides; NULL fills gaps.",
+          "section_id": "s8",
+          "cited": [],
+          "verdict": "supported",
+          "note": "Standard definition.",
+          "verified_by": []
+        },
+        {
+          "claim": "Using parentheses can guide join order for performance, especially with three or more tables.",
+          "section_id": "s8",
+          "cited": [
+            "S6",
+            "S8"
+          ],
+          "verdict": "supported",
+          "note": "S6 and S8 discuss join order and optimizer.",
+          "verified_by": [
+            "S6",
+            "S8"
+          ]
+        },
+        {
+          "claim": "NULL never matches another NULL; test for it explicitly.",
+          "section_id": "s8",
+          "cited": [
+            "S9"
+          ],
+          "verdict": "supported",
+          "note": "S9 confirms NULL matching behavior.",
+          "verified_by": [
+            "S9"
+          ]
+        },
+        {
+          "claim": "The example tables have 120 students and 95 rows after an INNER JOIN with enrollments.",
+          "section_id": "s1",
+          "cited": [],
+          "verdict": "unsupported",
+          "note": "No source provided; claim is illustrative.",
+          "verified_by": []
+        },
+        {
+          "claim": "The LEFT JOIN example returns all 120 students, with NULL for those without enrollments.",
+          "section_id": "s3",
+          "cited": [],
+          "verdict": "unsupported",
+          "note": "No source cited; claim is standard behavior.",
+          "verified_by": []
+        },
+        {
+          "claim": "The FULL OUTER JOIN example returns rows with both sides matched, rows only in students, and rows only in enrollments.",
+          "section_id": "s4",
+          "cited": [],
+          "verdict": "unsupported",
+          "note": "No source cited; claim is standard behavior.",
+          "verified_by": []
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "S1",
+          "tier": "A",
+          "relevance": "high",
+          "note": "Official PostgreSQL documentation; authoritative."
+        },
+        {
+          "source_id": "S6",
+          "tier": "A",
+          "relevance": "high",
+          "note": "Official PostgreSQL documentation on table expressions; authoritative."
+        },
+        {
+          "source_id": "S7",
+          "tier": "A",
+          "relevance": "high",
+          "note": "Official Oracle documentation; authoritative."
+        },
+        {
+          "source_id": "S8",
+          "tier": "A",
+          "relevance": "medium",
+          "note": "Oracle documentation; authoritative but older version."
+        },
+        {
+          "source_id": "S9",
+          "tier": "B",
+          "relevance": "high",
+          "note": "Wikipedia entry; generally reliable for basic SQL concepts."
+        }
+      ],
+      "objective_coverage": [],
+      "rubric": {},
+      "created_at": "2026-11-07T10:11:21+00:00"
+    },
+    "qc_instructional": {
+      "layer": "qc_instructional",
+      "lesson_version": 2,
+      "model": "openai/gpt-oss-20b",
+      "score": 73,
+      "summary": "The lesson demonstrates solid alignment with the learning objectives and provides clear, structured content with practical activities. Minor issues in clarity, consistency, and assessment design should be addressed to enhance instructional quality.",
+      "issues": [
+        {
+          "id": "I1",
+          "category": "timing",
+          "severity": "high",
+          "section_id": null,
+          "description": "Section times add up to 49 min, target is 45 min (+4).",
+          "evidence": "",
+          "suggestion": "Rebalance section minutes so the lesson fits exactly in the time budget.",
+          "origin": "rule"
+        },
+        {
+          "id": "I2",
+          "category": "assessment_alignment",
+          "severity": "high",
+          "section_id": "s7",
+          "description": "Question 2 asks about employees and departments, which were not introduced earlier, creating a mismatch with the lesson content.",
+          "evidence": "\"You need a list of all employees and any department they belong to; some employees have no department.\"",
+          "suggestion": "Replace the question with a scenario involving students, enrollments, and courses to maintain consistency.",
+          "origin": "llm"
+        },
+        {
+          "id": "I3",
+          "category": "clarity",
+          "severity": "medium",
+          "section_id": "s2",
+          "description": "The explanation of INNER JOIN uses a vague reference to PostgreSQL documentation [S1] without providing the actual content, leaving learners uncertain about the semantics.",
+          "evidence": "\"PostgreSQL describes this as combining rows that satisfy the expression [S1].\"",
+          "suggestion": "Insert a concise paraphrase of the documentation or a direct example illustrating the matching condition.",
+          "origin": "llm"
+        },
+        {
+          "id": "I4",
+          "category": "structure",
+          "severity": "medium",
+          "section_id": "s5",
+          "description": "The example mixes a three-table join with a full outer join scenario, causing confusion about the intended learning focus.",
+          "evidence": "\"What if we need all students and all courses, even if no enrollment exists?\"",
+          "suggestion": "Separate the two examples into distinct subsections or clearly label them as separate tasks.",
+          "origin": "llm"
+        },
+        {
+          "id": "I5",
+          "category": "time_feasibility",
+          "severity": "medium",
+          "section_id": "s7",
+          "description": "The knowledge check section is allocated 6 minutes but contains 5 questions, each with multiple subparts, which may exceed the time budget.",
+          "evidence": "\"6 min allotted, 211 words (~1.2 min)\"",
+          "suggestion": "Shorten the quiz to 3 questions or extend the allotted time to 8 minutes.",
+          "origin": "llm"
+        },
+        {
+          "id": "I6",
+          "category": "practical_application",
+          "severity": "low",
+          "section_id": "s6",
+          "description": "The activity does not explicitly require students to write queries that handle NULL checks or performance considerations.",
+          "evidence": "Tasks 1-3 focus on join types but omit NULL handling or optimizer hints.",
+          "suggestion": "Add a subtask asking students to identify NULL values in the result set and explain their significance.",
+          "origin": "llm"
+        }
+      ],
+      "claims": [],
+      "sources": [],
+      "objective_coverage": [
+        {
+          "component": "Identify the semantic differences between INNER, LEFT, and FULL OUTER JOIN",
+          "taught_in": [
+            "s2",
+            "s3",
+            "s4"
+          ],
+          "practised_in": [
+            "s5",
+            "s6"
+          ],
+          "assessed_in": [
+            "s7"
+          ],
+          "coverage": "full"
+        },
+        {
+          "component": "Select the appropriate join type for a given scenario",
+          "taught_in": [
+            "s2",
+            "s3",
+            "s4",
+            "s5"
+          ],
+          "practised_in": [
+            "s6"
+          ],
+          "assessed_in": [
+            "s7"
+          ],
+          "coverage": "full"
+        },
+        {
+          "component": "Explain the impact of NULL values and join order on results and performance",
+          "taught_in": [
+            "s3",
+            "s4",
+            "s5"
+          ],
+          "practised_in": [
+            "s6"
+          ],
+          "assessed_in": [
+            "s7"
+          ],
+          "coverage": "partial"
+        }
+      ],
+      "rubric": {
+        "objective_alignment": 4,
+        "clarity": 4,
+        "structure_and_flow": 4,
+        "examples_quality": 4,
+        "practical_application": 4,
+        "assessment_alignment": 4,
+        "engagement": 4,
+        "time_feasibility": 4,
+        "audience_fit": 4
+      },
+      "created_at": "2026-11-07T10:11:52+00:00"
+    }
+  },
+  "applied_issue_ids": []
+}

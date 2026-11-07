@@ -1,0 +1,300 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>HTTP Requests and Responses</title>
+<style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem;line-height:1.6;color:#1d1d1f}
+table{border-collapse:collapse;width:100%;margin:1rem 0}td,th{border:1px solid #ccc;padding:.4rem .6rem;text-align:left}th{background:#f3f3f3}
+pre{background:#f6f8fa;padding:1rem;overflow:auto;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace}
+h1{border-bottom:3px solid #333}h2{margin-top:2.2rem;border-bottom:1px solid #ddd}figure{margin:1rem 0}
+@media print{iframe{display:none}}</style></head><body><h1>HTTP Requests and Responses</h1>
+<p><strong>Learning objective:</strong> Explain GET and POST methods and distinguish between 2xx, 4xx, and 5xx response status categories.<br />
+<strong>Duration:</strong> 45 minutes (self-study or instructor-led)<br />
+<strong>Audience:</strong> Beginner web-development students</p>
+<h3>By the end of this lesson you will be able to:</h3>
+<ul>
+<li><strong>O1</strong> Explain the GET and POST HTTP methods, their characteristics (safe, idempotent) and typical use‑cases.</li>
+<li><strong>O2</strong> Distinguish the 2xx, 4xx, and 5xx response status code categories and identify common codes within each.</li>
+</ul>
+<h3>Lesson plan</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Section</th>
+<th>Type</th>
+<th>Minutes</th>
+<th>Objectives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Why does a web page sometimes disappear after you click a button?</td>
+<td>hook</td>
+<td>3</td>
+<td>O1, O2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>GET vs POST: What they are and when to use them</td>
+<td>concept</td>
+<td>8</td>
+<td>O1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Response status code families</td>
+<td>concept</td>
+<td>7</td>
+<td>O2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Worked examples with curl</td>
+<td>example</td>
+<td>6</td>
+<td>O1, O2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Hands‑on: Make GET and POST calls and interpret status codes</td>
+<td>activity</td>
+<td>9</td>
+<td>O1, O2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Quiz – Test your understanding</td>
+<td>knowledge check</td>
+<td>6</td>
+<td>O1, O2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Key takeaways &amp; common pitfalls</td>
+<td>summary</td>
+<td>6</td>
+<td>O1, O2</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>45</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>1. Why does a web page sometimes disappear after you click a button? (3 min)</h2>
+<p>Imagine you built a form that saves a new blog post. When you press <strong>Submit</strong>, the page either shows the new post or shows an error like <em>404 Not Found</em>. Which part of the HTTP conversation decides what you see?  In the next 45 minutes you’ll learn how the request method you choose (GET vs POST) and the server’s status code shape that experience.</p>
+<h2>2. GET vs POST: What they are and when to use them (8 min)</h2>
+<h3>GET</h3>
+<ul>
+<li>Retrieves a representation of a resource without a request body. It is <strong>safe</strong> (doesn’t change server state) and <strong>idempotent</strong> – repeating the request has the same effect [1][2].</li>
+<li>Parameters are placed in the query string: <code>GET /search?q=books HTTP/1.1</code> [1].</li>
+<li>Ideal for reading data, bookmarking, and caching.</li>
+</ul>
+<h3>POST</h3>
+<ul>
+<li>Sends data to the server in the request body (e.g., form fields, JSON). Not safe and not idempotent – each call can create a new resource [2].</li>
+<li>Used for creating resources, submitting forms, or any operation that changes state.</li>
+<li>Example request line: <code>POST /api/articles HTTP/1.1</code> with <code>Content-Type: application/json</code> header.</li>
+</ul>
+<h3>Safe vs Idempotent</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>GET</th>
+<th>POST</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Safe?</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Idempotent?</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Typical use‑case</td>
+<td>Read‑only fetches, search queries</td>
+<td>Create/update actions, file uploads</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Headers that matter</strong>
+- <code>Accept</code> tells the server which media types you can handle.
+- <code>Content-Type</code> describes the body you are sending (only for POST).
+- <code>Host</code> and the request line together identify the target resource [3].</p>
+<h2>3. Response status code families (7 min)</h2>
+<p>HTTP responses start with a three‑digit status code. The first digit groups them:</p>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Meaning</th>
+<th>Common codes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>2xx</strong></td>
+<td>Success – the request was received, understood, and processed [4].</td>
+<td><code>200 OK</code>, <code>201 Created</code></td>
+</tr>
+<tr>
+<td><strong>4xx</strong></td>
+<td>Client error – the request has bad syntax or cannot be fulfilled [4].</td>
+<td><code>400 Bad Request</code>, <code>401 Unauthorized</code>, <code>404 Not Found</code></td>
+</tr>
+<tr>
+<td><strong>5xx</strong></td>
+<td>Server error – the server failed to fulfill a valid request [4].</td>
+<td><code>500 Internal Server Error</code>, <code>503 Service Unavailable</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>What the codes tell you</strong>
+- <code>200</code> means the GET succeeded and the body contains the requested data.
+- <code>201</code> is returned after a successful POST that created a new resource.
+- <code>400</code> indicates the client sent malformed data (e.g., missing required fields).
+- <code>404</code> means the target URL does not exist.
+- <code>500</code> signals a problem on the server side, not the client’s fault.</p>
+<p>These families help you decide how to handle the response in code (retry, show error, etc.).</p>
+<h2>4. Worked examples with curl (6 min)</h2>
+<h3>Example 1 – GET request</h3>
+<pre><code class="language-bash">curl -i &quot;https://jsonplaceholder.typicode.com/posts/1&quot;
+</code></pre>
+<p>Output (truncated):</p>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+...
+{&quot;userId&quot;:1,&quot;id&quot;:1,&quot;title&quot;:&quot;...&quot;}
+</code></pre>
+<ul>
+<li>Status <strong>200</strong> → success (2xx family) [4].</li>
+<li>No request body, only a query path [1].</li>
+</ul>
+<h3>Example 2 – POST request</h3>
+<pre><code class="language-bash">curl -i -X POST https://jsonplaceholder.typicode.com/posts \
+     -H &quot;Content-Type: application/json&quot; \
+     -d '{&quot;title&quot;:&quot;My Post&quot;,&quot;body&quot;:&quot;Hello&quot;,&quot;userId&quot;:1}'
+</code></pre>
+<p>Output (truncated):</p>
+<pre><code>HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+...
+{&quot;id&quot;:101,&quot;title&quot;:&quot;My Post&quot;,&quot;body&quot;:&quot;Hello&quot;,&quot;userId&quot;:1}
+</code></pre>
+<ul>
+<li>Status <strong>201</strong> → resource created (2xx family) [4].</li>
+<li>Request includes a JSON body and <code>Content-Type</code> header.</li>
+</ul>
+<h3>Example 3 – Bad request (4xx)</h3>
+<pre><code class="language-bash">curl -i -X POST https://jsonplaceholder.typicode.com/posts \
+     -H &quot;Content-Type: application/json&quot; \
+     -d '{&quot;invalid&quot;:&quot;data&quot;}'
+</code></pre>
+<p>Possible response:</p>
+<pre><code>HTTP/1.1 400 Bad Request
+</code></pre>
+<p>Shows how the server signals client‑side problems [4].</p>
+<h2>5. Hands‑on: Make GET and POST calls and interpret status codes (9 min)</h2>
+<h4>Goal</h4>
+<p>Use <strong>curl</strong> (or any HTTP client) to send GET and POST requests to a public test API and record the status codes.</p>
+<h4>Steps</h4>
+<ol>
+<li>Open a terminal.</li>
+<li><strong>GET</strong> a known resource:
+   <code>bash
+   curl -s -o /dev/null -w "%{http_code}\n" https://jsonplaceholder.typicode.com/posts/5</code>
+   <em>Write down the code you see.</em></li>
+<li><strong>POST</strong> a new resource:
+   <code>bash
+   curl -s -o /dev/null -w "%{http_code}\n" -X POST https://jsonplaceholder.typicode.com/posts \
+        -H "Content-Type: application/json" \
+        -d '{"title":"Test","body":"Demo","userId":1}'</code>
+   <em>Note the code.</em></li>
+<li><strong>Trigger a client error</strong> by requesting a non‑existent endpoint:
+   <code>bash
+   curl -s -o /dev/null -w "%{http_code}\n" https://jsonplaceholder.typicode.com/unknown</code></li>
+<li><strong>Trigger a server error</strong> (optional – use a mock service that returns 500, e.g., a local mock server configured for this purpose).</li>
+<li>Fill the table below:
+| Request | URL | Method | Status code | Family |
+|---------|-----|--------|-------------|--------|
+| 1 | … | GET | … | … |
+| 2 | … | POST | … | … |
+| 3 | … | GET | … | … |
+| 4 | … | GET | … | … |</li>
+</ol>
+<h4>Expected outcome</h4>
+<ul>
+<li>GET returns <strong>200</strong> (2xx).</li>
+<li>POST returns <strong>201</strong> (2xx).</li>
+<li>Bad URL returns <strong>404</strong> (4xx).</li>
+<li>Optional server error returns <strong>500</strong> (5xx).</li>
+<li>Map each code to its family and explain why it occurred.</li>
+</ul>
+<h2>6. Quiz – Test your understanding (6 min)</h2>
+<ol>
+<li><strong>Which HTTP method is safe and idempotent?</strong>
+   - A) GET  <strong>(Correct)</strong>
+   - B) POST
+   - C) DELETE</li>
+<li><strong>When should you use POST instead of GET?</strong>
+   - A) To retrieve a cached image
+   - B) To submit form data that creates a new record <strong>(Correct)</strong>
+   - C) To bookmark a page</li>
+<li><strong>What does a 404 status code indicate?</strong>
+   - A) Server malfunction
+   - B) Client requested a non‑existent resource <strong>(Correct)</strong>
+   - C) Request succeeded</li>
+<li><strong>Which family does 503 belong to and what does it mean?</strong>
+   - A) 2xx – Success
+   - B) 4xx – Client error
+   - C) 5xx – Server error, service unavailable <strong>(Correct)</strong></li>
+<li><strong>A POST request receives a 201 response. What should you infer?</strong>
+   - A) The request failed
+   - B) A new resource was created successfully <strong>(Correct)</strong>
+   - C) The client sent bad data</li>
+</ol>
+<p><strong>Answer key</strong>
+1. GET is defined as safe and idempotent【S1】.
+2. POST is used for actions that change server state【S5】.
+3. 404 signals the target URL does not exist【S5】.
+4. 5xx codes indicate server‑side problems; 503 means service unavailable【S5】.
+5. 201 means the server created a resource as a result of the POST【S5】.</p>
+<h2>7. Key takeaways &amp; common pitfalls (6 min)</h2>
+<h3>Remember</h3>
+<ul>
+<li><strong>GET</strong> = read‑only, safe, idempotent, query string for parameters.</li>
+<li><strong>POST</strong> = send data, changes state, not safe nor idempotent.</li>
+<li>Status families: <strong>2xx</strong> success, <strong>4xx</strong> client error, <strong>5xx</strong> server error.</li>
+<li>Common codes: 200, 201, 400, 401, 404, 500, 503.</li>
+</ul>
+<h3>Common mistakes</h3>
+<ul>
+<li>Putting a request body in a GET – many servers will reject it with a 4xx [1].</li>
+<li>Ignoring the response code and assuming success.</li>
+<li>Forgetting to set <code>Content-Type</code> for POST bodies, leading to 400 errors.</li>
+</ul>
+<p>Use the status code to decide whether to retry, show a user‑friendly error, or proceed.</p>
+<h2>Supplementary videos (optional, not counted in the 45 minutes)</h2>
+<ul>
+<li><strong><a href="https://www.youtube.com/watch?v=tkfVQK6UxDI">HTTP Request Methods | GET, POST, PUT, DELETE</a></strong> - Curious Code, 3:01. Clear visual of GET vs POST semantics in under 4 minutes <em>Watch: after concept sections s2.</em></li>
+<li><strong><a href="https://www.youtube.com/watch?v=qmpUfWN7hh4">HTTP Status Codes Explained In 5 Minutes</a></strong> - ByteByteGo, 5:07. Concise explanation of 2xx, 4xx, 5xx families and common codes <em>Watch: after concept section s3.</em></li>
+</ul>
+<h2>Watch</h2><figure><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/tkfVQK6UxDI" title="HTTP Request Methods | GET, POST, PUT, DELETE" frameborder="0" allowfullscreen></iframe><figcaption>HTTP Request Methods | GET, POST, PUT, DELETE - Curious Code</figcaption></figure><figure><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/qmpUfWN7hh4" title="HTTP Status Codes Explained In 5 Minutes" frameborder="0" allowfullscreen></iframe><figcaption>HTTP Status Codes Explained In 5 Minutes - ByteByteGo</figcaption></figure><h2>References</h2>
+<ol>
+<li>GET request method - HTTP | MDN - MDN Web Docs. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET</li>
+<li>HTTP request methods - MDN Web Docs. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods</li>
+<li>HTTP reference - HTTP | MDN - MDN Web Docs. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference</li>
+<li>RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1): Semantics ...List of HTTP status codes - WikipediaHTTP Status Codes Reference — Complete List with ExplanationsHypertext Transfer Protocol (HTTP) Status Code RegistryHTTP Status Codes Reference - 1xx-5xx Explained - OltoolSMTP Status Codes Explained — 2xx, 4xx, 5xx &amp; X.Y.ZHTTP Status Code Lookup – Find &amp; Explain 1xx, 2xx, 3xx, 4xx .... <em>datatracker.ietf.org</em>. https://datatracker.ietf.org/doc/html/rfc7231</li>
+</ol>
+<h3>Videos</h3>
+<ul>
+<li>HTTP Request Methods | GET, POST, PUT, DELETE - Curious Code (3:01). https://www.youtube.com/watch?v=tkfVQK6UxDI</li>
+<li>HTTP Status Codes Explained In 5 Minutes - ByteByteGo (5:07). https://www.youtube.com/watch?v=qmpUfWN7hh4</li>
+</ul></body></html>
