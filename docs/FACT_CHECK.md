@@ -88,7 +88,7 @@ I checked every factual claim in both generated lessons by hand against the fact
 
 ### What was fixed and how
 * **Through the tool (Apply QC recommendations, v1 → v2):** 6 QC1 issues per lesson: missing citations, an invented URL, the contradicted join-order answer key, and an unsupported MySQL claim. QC1 scores went from **71 → 85** (HTTP) and **49 → 74** (SQL).
-* **Instructor edits after this manual check (v2 → v3, `finalize_samples.py`):** Content-Type wording, Example 3 replaced with a real 404 example, a concrete httpbin 500 step, accurate join-order wording, and the WHERE-vs-ON pitfall added. Minutes rebalanced to 45. Both QC layers were then **re-run on v3**, and those are the reports in `samples/`.
+* **Instructor edits after this manual check (v2 → v3, `finalize_samples.py`):** Content-Type wording, Example 3 replaced with a real 404 example, a concrete httpbin 500 step, accurate join-order wording, and the WHERE-vs-ON pitfall added. Minutes rebalanced to 45. Both QC layers were then **re-run on v3**, and those are the reports in `samples/`. Final scores: HTTP QC1 **94** / QC2 **85**, SQL QC1 **72** / QC2 **81**. The SQL QC1 score is lower because the re-audit raised new, valid points: RIGHT JOIN is used in the activity but never taught, the MySQL claim has no citation, and a book link is unreachable. Those are left as open recommendations.
 * **Code fixes prompted by this check:** citation-format normalisation (the model wrote `【S1】`), cleanup of glued search-result titles in references, and automatic 45-minute rebalancing after a QC revision.
 
 ### Summary

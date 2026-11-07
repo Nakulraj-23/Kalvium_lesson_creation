@@ -126,7 +126,7 @@ h1{border-bottom:3px solid #333}h2{margin-top:2.2rem;border-bottom:1px solid #dd
 </table>
 <p><strong>Headers that matter</strong>
 - <code>Accept</code> tells the server which media types you can handle.
-- <code>Content-Type</code> describes the body you are sending (only for POST).
+- <code>Content-Type</code> describes the media type of a message body. You send it whenever your request has a body (POST, PUT, PATCH), and servers also send it on responses.
 - <code>Host</code> and the request line together identify the target resource [3].</p>
 <h2>3. Response status code families (7 min)</h2>
 <p>HTTP responses start with a three‑digit status code. The first digit groups them:</p>
@@ -192,13 +192,13 @@ Content-Type: application/json; charset=utf-8
 <li>Status <strong>201</strong> → resource created (2xx family) [4].</li>
 <li>Request includes a JSON body and <code>Content-Type</code> header.</li>
 </ul>
-<h3>Example 3 – Bad request (4xx)</h3>
-<pre><code class="language-bash">curl -i -X POST https://jsonplaceholder.typicode.com/posts \
-     -H &quot;Content-Type: application/json&quot; \
-     -d '{&quot;invalid&quot;:&quot;data&quot;}'
+<h3>Example 3 – Client error (4xx)</h3>
+<p>JSONPlaceholder is a <em>fake</em> API: it accepts any body and does not validate input, so you can't trigger a 400 there.
+Ask for a resource that doesn't exist instead:</p>
+<pre><code class="language-bash">curl -i https://jsonplaceholder.typicode.com/posts/99999
 </code></pre>
-<p>Possible response:</p>
-<pre><code>HTTP/1.1 400 Bad Request
+<p>Response:</p>
+<pre><code>HTTP/1.1 404 Not Found
 </code></pre>
 <p>Shows how the server signals client‑side problems [4].</p>
 <h2>5. Hands‑on: Make GET and POST calls and interpret status codes (9 min)</h2>
@@ -220,15 +220,50 @@ Content-Type: application/json; charset=utf-8
 <li><strong>Trigger a client error</strong> by requesting a non‑existent endpoint:
    <code>bash
    curl -s -o /dev/null -w "%{http_code}\n" https://jsonplaceholder.typicode.com/unknown</code></li>
-<li><strong>Trigger a server error</strong> (optional – use a mock service that returns 500, e.g., a local mock server configured for this purpose).</li>
-<li>Fill the table below:
-| Request | URL | Method | Status code | Family |
-|---------|-----|--------|-------------|--------|
-| 1 | … | GET | … | … |
-| 2 | … | POST | … | … |
-| 3 | … | GET | … | … |
-| 4 | … | GET | … | … |</li>
+<li><strong>Trigger a server error</strong> (optional): <code>curl -s -o /dev/null -w "%{http_code}\n" https://httpbin.org/status/500</code> (httpbin returns whatever status code you ask for).</li>
+<li>Fill the table below:</li>
 </ol>
+<table>
+<thead>
+<tr>
+<th>Request</th>
+<th>URL</th>
+<th>Method</th>
+<th>Status code</th>
+<th>Family</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>…</td>
+<td>GET</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2</td>
+<td>…</td>
+<td>POST</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>3</td>
+<td>…</td>
+<td>GET</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>4</td>
+<td>…</td>
+<td>GET</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
 <h4>Expected outcome</h4>
 <ul>
 <li>GET returns <strong>200</strong> (2xx).</li>
@@ -261,11 +296,11 @@ Content-Type: application/json; charset=utf-8
    - C) The client sent bad data</li>
 </ol>
 <p><strong>Answer key</strong>
-1. GET is defined as safe and idempotent【S1】.
-2. POST is used for actions that change server state【S5】.
-3. 404 signals the target URL does not exist【S5】.
-4. 5xx codes indicate server‑side problems; 503 means service unavailable【S5】.
-5. 201 means the server created a resource as a result of the POST【S5】.</p>
+1. GET is defined as safe and idempotent[1].
+2. POST is used for actions that change server state[4].
+3. 404 signals the target URL does not exist[4].
+4. 5xx codes indicate server‑side problems; 503 means service unavailable[4].
+5. 201 means the server created a resource as a result of the POST[4].</p>
 <h2>7. Key takeaways &amp; common pitfalls (6 min)</h2>
 <h3>Remember</h3>
 <ul>
@@ -288,10 +323,10 @@ Content-Type: application/json; charset=utf-8
 </ul>
 <h2>Watch</h2><figure><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/tkfVQK6UxDI" title="HTTP Request Methods | GET, POST, PUT, DELETE" frameborder="0" allowfullscreen></iframe><figcaption>HTTP Request Methods | GET, POST, PUT, DELETE - Curious Code</figcaption></figure><figure><iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/qmpUfWN7hh4" title="HTTP Status Codes Explained In 5 Minutes" frameborder="0" allowfullscreen></iframe><figcaption>HTTP Status Codes Explained In 5 Minutes - ByteByteGo</figcaption></figure><h2>References</h2>
 <ol>
-<li>GET request method - HTTP | MDN - MDN Web Docs. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET</li>
+<li>GET request method - HTTP. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET</li>
 <li>HTTP request methods - MDN Web Docs. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods</li>
-<li>HTTP reference - HTTP | MDN - MDN Web Docs. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference</li>
-<li>RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1): Semantics ...List of HTTP status codes - WikipediaHTTP Status Codes Reference — Complete List with ExplanationsHypertext Transfer Protocol (HTTP) Status Code RegistryHTTP Status Codes Reference - 1xx-5xx Explained - OltoolSMTP Status Codes Explained — 2xx, 4xx, 5xx &amp; X.Y.ZHTTP Status Code Lookup – Find &amp; Explain 1xx, 2xx, 3xx, 4xx .... <em>datatracker.ietf.org</em>. https://datatracker.ietf.org/doc/html/rfc7231</li>
+<li>HTTP reference - HTTP. <em>developer.mozilla.org</em>. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference</li>
+<li>RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1): Semantics. <em>datatracker.ietf.org</em>. https://datatracker.ietf.org/doc/html/rfc7231</li>
 </ol>
 <h3>Videos</h3>
 <ul>

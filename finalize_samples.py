@@ -67,6 +67,13 @@ HTTP/1.1 404 Not Found
 }
 
 
+# the exact projects that were fact-checked (other runs with the same title are ignored)
+PROJECT_IDS = {
+    "HTTP Requests and Responses": "http-requests-and-responses-a02880",
+    "SQL Joins: Combining Data from Multiple Tables": "sql-joins-combining-data-from-multiple-t-5f8974",
+}
+
+
 def main():
     s = get_settings()
     store = Store(s.data_dir)
@@ -74,11 +81,16 @@ def main():
     slugs = {"HTTP Requests and Responses": "http-requests-and-responses",
              "SQL Joins: Combining Data from Multiple Tables": "sql-joins"}
     for title, edits in EDITS.items():
-        found = [x for x in store.list_projects() if x["title"] == title]
-        if not found:
-            print("project not found - run run_samples.py first:", title)
-            continue
-        p = store.load(found[0]["id"])
+        pid = PROJECT_IDS[title]
+        try:
+            p = store.load(pid)
+        except FileNotFoundError:
+            found = [x for x in store.list_projects() if x["title"] == title]
+            if not found:
+                print("project not found - run run_samples.py first:", title)
+                continue
+            p = store.load(found[0]["id"])
+        print(f"{title}: project {p.id}, v{p.lesson_version}")
         if any(v.note.startswith("Instructor edit after manual fact-check") for v in p.versions):
             print(f"{title}: edits already applied (v{p.lesson_version})")
         else:
@@ -91,6 +103,9 @@ def main():
                     applied += 1
                 else:
                     print(f"  WARNING: text to correct not found in {sid}: {old[:60]!r}")
+            if applied == 0:
+                print("  no corrections matched this lesson - nothing saved")
+                continue
             for sec in new.sections:
                 sec.content_md = normalize_citations(sec.content_md)
             if new.total_minutes() != new.duration_minutes:

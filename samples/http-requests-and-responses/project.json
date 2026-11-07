@@ -4,7 +4,7 @@
   "objective": "Explain GET and POST methods and distinguish between 2xx, 4xx, and 5xx response status categories.",
   "audience": "Beginner web-development students",
   "created_at": "2026-11-06T21:13:39+00:00",
-  "updated_at": "2026-11-07T10:09:39+00:00",
+  "updated_at": "2026-11-07T10:33:03+00:00",
   "steps": {
     "research": {
       "state": "done",
@@ -25,13 +25,13 @@
       "state": "done",
       "error": null,
       "warnings": [],
-      "updated_at": "2026-11-07T10:09:18+00:00"
+      "updated_at": "2026-11-07T10:32:44+00:00"
     },
     "qc_instructional": {
       "state": "done",
       "error": null,
       "warnings": [],
-      "updated_at": "2026-11-07T10:09:39+00:00"
+      "updated_at": "2026-11-07T10:33:03+00:00"
     }
   },
   "research": {
@@ -398,7 +398,7 @@
         "type": "concept",
         "title": "GET vs POST: What they are and when to use them",
         "minutes": 8,
-        "content_md": "### GET\n- Retrieves a representation of a resource without a request body. It is **safe** (doesn’t change server state) and **idempotent** – repeating the request has the same effect [S1][S2].\n- Parameters are placed in the query string: `GET /search?q=books HTTP/1.1` [S1].\n- Ideal for reading data, bookmarking, and caching.\n\n### POST\n- Sends data to the server in the request body (e.g., form fields, JSON). Not safe and not idempotent – each call can create a new resource [S2].\n- Used for creating resources, submitting forms, or any operation that changes state.\n- Example request line: `POST /api/articles HTTP/1.1` with `Content-Type: application/json` header.\n\n### Safe vs Idempotent\n| Property | GET | POST |\n|----------|-----|------|\n| Safe? | ✅ | ❌ |\n| Idempotent? | ✅ | ❌ |\n| Typical use‑case | Read‑only fetches, search queries | Create/update actions, file uploads |\n\n**Headers that matter**\n- `Accept` tells the server which media types you can handle.\n- `Content-Type` describes the body you are sending (only for POST).\n- `Host` and the request line together identify the target resource [S4].",
+        "content_md": "### GET\n- Retrieves a representation of a resource without a request body. It is **safe** (doesn’t change server state) and **idempotent** – repeating the request has the same effect [S1][S2].\n- Parameters are placed in the query string: `GET /search?q=books HTTP/1.1` [S1].\n- Ideal for reading data, bookmarking, and caching.\n\n### POST\n- Sends data to the server in the request body (e.g., form fields, JSON). Not safe and not idempotent – each call can create a new resource [S2].\n- Used for creating resources, submitting forms, or any operation that changes state.\n- Example request line: `POST /api/articles HTTP/1.1` with `Content-Type: application/json` header.\n\n### Safe vs Idempotent\n| Property | GET | POST |\n|----------|-----|------|\n| Safe? | ✅ | ❌ |\n| Idempotent? | ✅ | ❌ |\n| Typical use‑case | Read‑only fetches, search queries | Create/update actions, file uploads |\n\n**Headers that matter**\n- `Accept` tells the server which media types you can handle.\n- `Content-Type` describes the media type of a message body. You send it whenever your request has a body (POST, PUT, PATCH), and servers also send it on responses.\n- `Host` and the request line together identify the target resource [S4].",
         "objectives": [
           "O1"
         ]
@@ -418,7 +418,7 @@
         "type": "example",
         "title": "Worked examples with curl",
         "minutes": 6,
-        "content_md": "### Example 1 – GET request\n```bash\ncurl -i \"https://jsonplaceholder.typicode.com/posts/1\"\n```\nOutput (truncated):\n```\nHTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n...\n{\"userId\":1,\"id\":1,\"title\":\"...\"}\n```\n- Status **200** → success (2xx family) [S5].\n- No request body, only a query path [S1].\n\n### Example 2 – POST request\n```bash\ncurl -i -X POST https://jsonplaceholder.typicode.com/posts \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\"title\":\"My Post\",\"body\":\"Hello\",\"userId\":1}'\n```\nOutput (truncated):\n```\nHTTP/1.1 201 Created\nContent-Type: application/json; charset=utf-8\n...\n{\"id\":101,\"title\":\"My Post\",\"body\":\"Hello\",\"userId\":1}\n```\n- Status **201** → resource created (2xx family) [S5].\n- Request includes a JSON body and `Content-Type` header.\n\n### Example 3 – Bad request (4xx)\n```bash\ncurl -i -X POST https://jsonplaceholder.typicode.com/posts \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\"invalid\":\"data\"}'\n```\nPossible response:\n```\nHTTP/1.1 400 Bad Request\n```\nShows how the server signals client‑side problems [S5].",
+        "content_md": "### Example 1 – GET request\n```bash\ncurl -i \"https://jsonplaceholder.typicode.com/posts/1\"\n```\nOutput (truncated):\n```\nHTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n...\n{\"userId\":1,\"id\":1,\"title\":\"...\"}\n```\n- Status **200** → success (2xx family) [S5].\n- No request body, only a query path [S1].\n\n### Example 2 – POST request\n```bash\ncurl -i -X POST https://jsonplaceholder.typicode.com/posts \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\"title\":\"My Post\",\"body\":\"Hello\",\"userId\":1}'\n```\nOutput (truncated):\n```\nHTTP/1.1 201 Created\nContent-Type: application/json; charset=utf-8\n...\n{\"id\":101,\"title\":\"My Post\",\"body\":\"Hello\",\"userId\":1}\n```\n- Status **201** → resource created (2xx family) [S5].\n- Request includes a JSON body and `Content-Type` header.\n\n### Example 3 – Client error (4xx)\nJSONPlaceholder is a *fake* API: it accepts any body and does not validate input, so you can't trigger a 400 there.\nAsk for a resource that doesn't exist instead:\n```bash\ncurl -i https://jsonplaceholder.typicode.com/posts/99999\n```\nResponse:\n```\nHTTP/1.1 404 Not Found\n```\nShows how the server signals client‑side problems [S5].",
         "objectives": [
           "O1",
           "O2"
@@ -429,7 +429,7 @@
         "type": "activity",
         "title": "Hands‑on: Make GET and POST calls and interpret status codes",
         "minutes": 9,
-        "content_md": "#### Goal\nUse **curl** (or any HTTP client) to send GET and POST requests to a public test API and record the status codes.\n\n#### Steps\n1. Open a terminal.\n2. **GET** a known resource:\n   ```bash\n   curl -s -o /dev/null -w \"%{http_code}\\n\" https://jsonplaceholder.typicode.com/posts/5\n   ```\n   *Write down the code you see.*\n3. **POST** a new resource:\n   ```bash\n   curl -s -o /dev/null -w \"%{http_code}\\n\" -X POST https://jsonplaceholder.typicode.com/posts \\\n        -H \"Content-Type: application/json\" \\\n        -d '{\"title\":\"Test\",\"body\":\"Demo\",\"userId\":1}'\n   ```\n   *Note the code.*\n4. **Trigger a client error** by requesting a non‑existent endpoint:\n   ```bash\n   curl -s -o /dev/null -w \"%{http_code}\\n\" https://jsonplaceholder.typicode.com/unknown\n   ```\n5. **Trigger a server error** (optional – use a mock service that returns 500, e.g., a local mock server configured for this purpose).\n6. Fill the table below:\n| Request | URL | Method | Status code | Family |\n|---------|-----|--------|-------------|--------|\n| 1 | … | GET | … | … |\n| 2 | … | POST | … | … |\n| 3 | … | GET | … | … |\n| 4 | … | GET | … | … |\n\n#### Expected outcome\n- GET returns **200** (2xx).\n- POST returns **201** (2xx).\n- Bad URL returns **404** (4xx).\n- Optional server error returns **500** (5xx).\n- Map each code to its family and explain why it occurred.",
+        "content_md": "#### Goal\nUse **curl** (or any HTTP client) to send GET and POST requests to a public test API and record the status codes.\n\n#### Steps\n1. Open a terminal.\n2. **GET** a known resource:\n   ```bash\n   curl -s -o /dev/null -w \"%{http_code}\\n\" https://jsonplaceholder.typicode.com/posts/5\n   ```\n   *Write down the code you see.*\n3. **POST** a new resource:\n   ```bash\n   curl -s -o /dev/null -w \"%{http_code}\\n\" -X POST https://jsonplaceholder.typicode.com/posts \\\n        -H \"Content-Type: application/json\" \\\n        -d '{\"title\":\"Test\",\"body\":\"Demo\",\"userId\":1}'\n   ```\n   *Note the code.*\n4. **Trigger a client error** by requesting a non‑existent endpoint:\n   ```bash\n   curl -s -o /dev/null -w \"%{http_code}\\n\" https://jsonplaceholder.typicode.com/unknown\n   ```\n5. **Trigger a server error** (optional): `curl -s -o /dev/null -w \"%{http_code}\\n\" https://httpbin.org/status/500` (httpbin returns whatever status code you ask for).\n6. Fill the table below:\n\n| Request | URL | Method | Status code | Family |\n|---------|-----|--------|-------------|--------|\n| 1 | … | GET | … | … |\n| 2 | … | POST | … | … |\n| 3 | … | GET | … | … |\n| 4 | … | GET | … | … |\n\n#### Expected outcome\n- GET returns **200** (2xx).\n- POST returns **201** (2xx).\n- Bad URL returns **404** (4xx).\n- Optional server error returns **500** (5xx).\n- Map each code to its family and explain why it occurred.",
         "objectives": [
           "O1",
           "O2"
@@ -440,7 +440,7 @@
         "type": "knowledge_check",
         "title": "Quiz – Test your understanding",
         "minutes": 6,
-        "content_md": "1. **Which HTTP method is safe and idempotent?**\n   - A) GET  **(Correct)**\n   - B) POST\n   - C) DELETE\n2. **When should you use POST instead of GET?**\n   - A) To retrieve a cached image\n   - B) To submit form data that creates a new record **(Correct)**\n   - C) To bookmark a page\n3. **What does a 404 status code indicate?**\n   - A) Server malfunction\n   - B) Client requested a non‑existent resource **(Correct)**\n   - C) Request succeeded\n4. **Which family does 503 belong to and what does it mean?**\n   - A) 2xx – Success\n   - B) 4xx – Client error\n   - C) 5xx – Server error, service unavailable **(Correct)**\n5. **A POST request receives a 201 response. What should you infer?**\n   - A) The request failed\n   - B) A new resource was created successfully **(Correct)**\n   - C) The client sent bad data\n\n**Answer key**\n1. GET is defined as safe and idempotent【S1】.\n2. POST is used for actions that change server state【S5】.\n3. 404 signals the target URL does not exist【S5】.\n4. 5xx codes indicate server‑side problems; 503 means service unavailable【S5】.\n5. 201 means the server created a resource as a result of the POST【S5】.",
+        "content_md": "1. **Which HTTP method is safe and idempotent?**\n   - A) GET  **(Correct)**\n   - B) POST\n   - C) DELETE\n2. **When should you use POST instead of GET?**\n   - A) To retrieve a cached image\n   - B) To submit form data that creates a new record **(Correct)**\n   - C) To bookmark a page\n3. **What does a 404 status code indicate?**\n   - A) Server malfunction\n   - B) Client requested a non‑existent resource **(Correct)**\n   - C) Request succeeded\n4. **Which family does 503 belong to and what does it mean?**\n   - A) 2xx – Success\n   - B) 4xx – Client error\n   - C) 5xx – Server error, service unavailable **(Correct)**\n5. **A POST request receives a 201 response. What should you infer?**\n   - A) The request failed\n   - B) A new resource was created successfully **(Correct)**\n   - C) The client sent bad data\n\n**Answer key**\n1. GET is defined as safe and idempotent[S1].\n2. POST is used for actions that change server state[S5].\n3. 404 signals the target URL does not exist[S5].\n4. 5xx codes indicate server‑side problems; 503 means service unavailable[S5].\n5. 201 means the server created a resource as a result of the POST[S5].",
         "objectives": [
           "O1",
           "O2"
@@ -472,7 +472,7 @@
     ],
     "further_reading": []
   },
-  "lesson_version": 2,
+  "lesson_version": 3,
   "versions": [
     {
       "version": 1,
@@ -483,48 +483,33 @@
       "version": 2,
       "note": "Applied QC recommendations F1, F2, F3, F4, F5, F6",
       "created_at": "2026-11-07T10:08:50+00:00"
+    },
+    {
+      "version": 3,
+      "note": "Instructor edit after manual fact-check (3 corrections, see docs/FACT_CHECK.md)",
+      "created_at": "2026-11-07T10:32:39+00:00"
     }
   ],
   "qc_reports": {
     "qc_factual": {
       "layer": "qc_factual",
-      "lesson_version": 2,
+      "lesson_version": 3,
       "model": "openai/gpt-oss-20b",
-      "score": 85,
-      "summary": "The lesson accurately presents core HTTP method semantics and status code meanings, with most claims supported by reputable MDN and RFC sources. Minor gaps include lack of explicit citations for some statements and a few oversimplified claims about bookmarking and caching. Overall research quality is high, but adding precise references and clarifying ambiguous points would strengthen factual accuracy. (Claims checked: 17; supported by sources: 94%.)",
+      "score": 94,
+      "summary": "The lesson accurately presents core HTTP method semantics and status code families, with most claims supported by authoritative sources such as MDN and RFC 7231. Minor oversimplifications (e.g., bookmarking/caching for GET) and a few uncited assertions are noted, but overall research quality and factual accuracy are high. (Claims checked: 25; supported by sources: 98%.)",
       "issues": [
         {
           "id": "F1",
-          "category": "gap",
-          "severity": "high",
-          "section_id": "s2",
-          "description": "Missing explicit definition of idempotence for POST (though implied)",
-          "evidence": "S2",
-          "suggestion": "Add statement that POST is not idempotent with citation",
-          "origin": "llm"
-        },
-        {
-          "id": "F2",
           "category": "misleading",
           "severity": "medium",
           "section_id": "s2",
           "description": "Claim that GET is ideal for bookmarking and caching is not explicitly supported by cited sources",
           "evidence": "S1",
-          "suggestion": "Add citation to caching behavior or rephrase",
+          "suggestion": "Add citation to caching behavior or rephrase to 'commonly used for bookmarking and caching due to idempotence and cacheability'",
           "origin": "llm"
         },
         {
-          "id": "F3",
-          "category": "citation",
-          "severity": "medium",
-          "section_id": "s2",
-          "description": "Content-Type header claim lacks direct citation",
-          "evidence": "S4",
-          "suggestion": "Provide explicit source stating Content-Type is required for POST bodies",
-          "origin": "llm"
-        },
-        {
-          "id": "F4",
+          "id": "F2",
           "category": "process",
           "severity": "low",
           "section_id": null,
@@ -534,13 +519,23 @@
           "origin": "rule"
         },
         {
-          "id": "F5",
-          "category": "inconsistency",
+          "id": "F3",
+          "category": "gap",
+          "severity": "low",
+          "section_id": "s2",
+          "description": "Missing explicit mention that POST is not cacheable",
+          "evidence": "S2",
+          "suggestion": "Include note that POST responses are generally not cached unless explicitly allowed by Cache-Control",
+          "origin": "llm"
+        },
+        {
+          "id": "F4",
+          "category": "citation",
           "severity": "low",
           "section_id": "s4",
-          "description": "Example 3 shows 400 Bad Request but does not explain why (invalid data)",
-          "evidence": "S5",
-          "suggestion": "Clarify that server rejected due to missing required fields",
+          "description": "Example 3 claims JSONPlaceholder does not validate input to trigger 400, but no source cited",
+          "evidence": "none",
+          "suggestion": "Add citation or remove claim",
           "origin": "llm"
         }
       ],
@@ -592,19 +587,19 @@
             "S1"
           ],
           "verdict": "partially_supported",
-          "note": "MDN mentions reading data; bookmarking and caching are common but not explicitly stated",
+          "note": "MDN mentions reading data; bookmarking and caching are implied but not explicitly stated",
           "verified_by": [
             "S1"
           ]
         },
         {
-          "claim": "POST is not safe and not idempotent",
+          "claim": "POST requests send data in the request body and are not safe or idempotent",
           "section_id": "s2",
           "cited": [
             "S2"
           ],
           "verdict": "supported",
-          "note": "MDN states POST is not safe nor idempotent",
+          "note": "MDN states POST is not safe or idempotent",
           "verified_by": [
             "S2"
           ]
@@ -622,15 +617,171 @@
           ]
         },
         {
-          "claim": "Content-Type header is required for POST bodies",
+          "claim": "Content-Type header is sent whenever the request has a body (POST, PUT, PATCH)",
           "section_id": "s2",
           "cited": [
             "S4"
           ],
-          "verdict": "partially_supported",
-          "note": "MDN notes Content-Type describes body; not strictly required but recommended",
+          "verdict": "supported",
+          "note": "MDN reference explains Content-Type usage",
           "verified_by": [
             "S4"
+          ]
+        },
+        {
+          "claim": "Host header together with request line identifies the target resource",
+          "section_id": "s2",
+          "cited": [
+            "S4"
+          ],
+          "verdict": "supported",
+          "note": "MDN reference mentions Host header role",
+          "verified_by": [
+            "S4"
+          ]
+        },
+        {
+          "claim": "2xx status codes indicate success – request was received, understood, and processed",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 defines 2xx as success",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "4xx status codes indicate client error – bad syntax or cannot be fulfilled",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 defines 4xx as client error",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "5xx status codes indicate server error – server failed to fulfill a valid request",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 defines 5xx as server error",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "200 OK means GET succeeded and body contains requested data",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 specifies 200 OK semantics",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "201 Created is returned after a successful POST that created a new resource",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 specifies 201 Created semantics",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "400 Bad Request indicates client sent malformed data (e.g., missing required fields)",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 defines 400 Bad Request",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "404 Not Found means target URL does not exist",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 defines 404 Not Found",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "500 Internal Server Error signals a problem on the server side, not the client’s fault",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 defines 500 Internal Server Error",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "503 Service Unavailable is a 5xx server error indicating service unavailable",
+          "section_id": "s3",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "RFC 7231 defines 503 Service Unavailable",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "GET request to https://jsonplaceholder.typicode.com/posts/1 returns 200 OK",
+          "section_id": "s4",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "curl example shows 200 OK",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "POST request to https://jsonplaceholder.typicode.com/posts returns 201 Created",
+          "section_id": "s4",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "curl example shows 201 Created",
+          "verified_by": [
+            "S5"
+          ]
+        },
+        {
+          "claim": "GET request to https://jsonplaceholder.typicode.com/posts/99999 returns 404 Not Found",
+          "section_id": "s4",
+          "cited": [
+            "S5"
+          ],
+          "verdict": "supported",
+          "note": "curl example shows 404 Not Found",
+          "verified_by": [
+            "S5"
           ]
         },
         {
@@ -652,19 +803,19 @@
             "S5"
           ],
           "verdict": "supported",
-          "note": "Answer key cites S5 which covers POST semantics",
+          "note": "Quiz answer aligns with RFC",
           "verified_by": [
             "S5"
           ]
         },
         {
-          "claim": "404 indicates the target URL does not exist",
+          "claim": "404 indicates client requested a non-existent resource",
           "section_id": "s6",
           "cited": [
             "S5"
           ],
           "verdict": "supported",
-          "note": "RFC 7231 defines 404 as Not Found",
+          "note": "Quiz answer aligns with RFC",
           "verified_by": [
             "S5"
           ]
@@ -676,81 +827,19 @@
             "S5"
           ],
           "verdict": "supported",
-          "note": "RFC 7231 defines 503",
+          "note": "Quiz answer aligns with RFC",
           "verified_by": [
             "S5"
           ]
         },
         {
-          "claim": "201 response to POST indicates a new resource was created",
+          "claim": "201 response to POST means a new resource was created successfully",
           "section_id": "s6",
           "cited": [
             "S5"
           ],
           "verdict": "supported",
-          "note": "RFC 7231 defines 201 Created",
-          "verified_by": [
-            "S5"
-          ]
-        },
-        {
-          "claim": "GET returns 200 OK for successful retrieval",
-          "section_id": "s4",
-          "cited": [
-            "S5"
-          ],
-          "verdict": "supported",
-          "note": "Example shows 200",
-          "verified_by": [
-            "S5"
-          ]
-        },
-        {
-          "claim": "POST returns 201 Created for successful creation",
-          "section_id": "s4",
-          "cited": [
-            "S5"
-          ],
-          "verdict": "supported",
-          "note": "Example shows 201",
-          "verified_by": [
-            "S5"
-          ]
-        },
-        {
-          "claim": "400 Bad Request indicates malformed client data",
-          "section_id": "s4",
-          "cited": [
-            "S5"
-          ],
-          "verdict": "supported",
-          "note": "RFC 7231 defines 400",
-          "verified_by": [
-            "S5"
-          ]
-        },
-        {
-          "claim": "GET is safe and idempotent, POST is not safe nor idempotent",
-          "section_id": "s7",
-          "cited": [
-            "S1",
-            "S2"
-          ],
-          "verdict": "supported",
-          "note": "Summary repeats earlier claims",
-          "verified_by": [
-            "S1",
-            "S2"
-          ]
-        },
-        {
-          "claim": "Common codes include 200, 201, 400, 401, 404, 500, 503",
-          "section_id": "s7",
-          "cited": [
-            "S5"
-          ],
-          "verdict": "supported",
-          "note": "RFC 7231 lists these codes",
+          "note": "Quiz answer aligns with RFC",
           "verified_by": [
             "S5"
           ]
@@ -761,76 +850,76 @@
           "source_id": "S1",
           "tier": "A",
           "relevance": "high",
-          "note": "MDN authoritative reference for GET semantics"
+          "note": "MDN Web Docs, authoritative for HTTP method semantics"
         },
         {
           "source_id": "S2",
           "tier": "A",
           "relevance": "high",
-          "note": "MDN authoritative reference for HTTP methods"
+          "note": "MDN Web Docs, authoritative for HTTP method semantics"
         },
         {
           "source_id": "S3",
           "tier": "A",
           "relevance": "medium",
-          "note": "General HTTP overview, not directly cited"
+          "note": "General MDN overview, less specific to claims"
         },
         {
           "source_id": "S4",
           "tier": "A",
           "relevance": "medium",
-          "note": "MDN reference for headers, used for Content-Type claim"
+          "note": "MDN reference for headers, reliable but not primary for method semantics"
         },
         {
           "source_id": "S5",
           "tier": "A",
           "relevance": "high",
-          "note": "RFC 7231 official standard for status codes"
+          "note": "RFC 7231, official standard for HTTP/1.1 semantics"
         },
         {
           "source_id": "S6",
           "tier": "B",
           "relevance": "low",
-          "note": "Wikipedia list, not directly cited"
+          "note": "Wikipedia list, secondary source"
         },
         {
           "source_id": "S7",
           "tier": "B",
           "relevance": "low",
-          "note": "Wikipedia overview, not directly cited"
+          "note": "Wikipedia overview, secondary source"
         },
         {
           "source_id": "S8",
           "tier": "C",
           "relevance": "low",
-          "note": "MDN alternative source, not directly cited"
+          "note": "MDN devdoc, duplicate of S1"
         },
         {
           "source_id": "S9",
           "tier": "C",
-          "relevance": "low",
-          "note": "Blog article, not directly cited"
+          "relevance": "medium",
+          "note": "Third‑party guide, not primary source"
         }
       ],
       "objective_coverage": [],
       "rubric": {},
-      "created_at": "2026-11-07T10:09:18+00:00"
+      "created_at": "2026-11-07T10:32:44+00:00"
     },
     "qc_instructional": {
       "layer": "qc_instructional",
-      "lesson_version": 2,
+      "lesson_version": 3,
       "model": "openai/gpt-oss-20b",
-      "score": 79,
-      "summary": "The lesson aligns well with the stated objectives, provides clear structure, and includes practical examples and assessment. Minor issues around wording, example accessibility, and activity pacing should be addressed to enhance learner experience.",
+      "score": 85,
+      "summary": "The lesson aligns well with the objectives, offers clear explanations, solid examples, and practical application. Minor adjustments to quiz wording, example breadth, and timing would enhance clarity and learner confidence.",
       "issues": [
         {
           "id": "I1",
           "category": "alignment",
           "severity": "medium",
           "section_id": "s6",
-          "description": "Quiz question 3 asks about 404 but the answer key incorrectly cites 404 as client error; the explanation in the key references 404 as non‑existent resource, which is correct, but the wording in the question could mislead learners into thinking 404 is a server error.",
-          "evidence": "Question 3: \"What does a 404 status code indicate?\" – answer key says \"Client requested a non‑existent resource\" but the question wording could be interpreted as a server error.",
-          "suggestion": "Rephrase question to: \"A 404 status code indicates that the requested resource does not exist on the server.\"",
+          "description": "Quiz question 3 asks about 404 but answer key incorrectly cites 404 as client error; the explanation in the key is correct but the question wording could mislead learners into thinking 404 is a server error.",
+          "evidence": "Question 3: \"What does a 404 status code indicate?\" – answer key says client requested a non‑existent resource.",
+          "suggestion": "Rephrase answer key to explicitly state 404 is a client error and add a brief note in the question to avoid confusion.",
           "origin": "llm"
         },
         {
@@ -838,29 +927,29 @@
           "category": "examples",
           "severity": "medium",
           "section_id": "s4",
-          "description": "Worked examples rely heavily on curl syntax; beginners may not be familiar with command line, reducing accessibility.",
-          "evidence": "Examples 1-3 all use bash commands without explanation of flags.",
-          "suggestion": "Add a brief explanation of each curl flag, or provide a GUI-based tool example (e.g., Postman) to broaden accessibility.",
+          "description": "Worked examples rely on a fake API that does not allow triggering 400 errors, limiting the demonstration of client‑error handling.",
+          "evidence": "Example 3 notes that JSONPlaceholder cannot trigger 400.",
+          "suggestion": "Include a second example using httpbin.org/status/400 to show a real 400 response, or explain why 400 cannot be demonstrated with the chosen API.",
           "origin": "llm"
         },
         {
           "id": "I3",
-          "category": "practical_application",
+          "category": "engagement",
           "severity": "medium",
-          "section_id": "s5",
-          "description": "Activity steps 4 and 5 assume availability of a mock server for 500 errors; not all learners will have this setup, leading to incomplete practice.",
-          "evidence": "Step 5: \"Trigger a server error (optional – use a mock service that returns 500\"",
-          "suggestion": "Provide a ready‑to‑use mock endpoint (e.g., https://httpstat.us/500) or include a local script example.",
+          "section_id": "s1",
+          "description": "Hook uses a scenario but could be more interactive by asking learners to predict the outcome before revealing the explanation.",
+          "evidence": "Hook text only describes scenario.",
+          "suggestion": "Add a quick poll or a prompt: \"What do you think will happen when you click Submit?\" to increase engagement.",
           "origin": "llm"
         },
         {
           "id": "I4",
           "category": "clarity",
           "severity": "low",
-          "section_id": "s1",
-          "description": "Hook uses phrase \"web page sometimes disappear\" – minor grammatical error; could confuse beginners.",
-          "evidence": "\"Why does a web page sometimes disappear after you click a button?\"",
-          "suggestion": "Change to \"Why does a web page sometimes disappear after you click a button?\" (add question mark) and consider rephrasing to \"Why might a web page disappear after you click a button?\"",
+          "section_id": "s2",
+          "description": "The table of safe vs idempotent properties uses check marks that may not be accessible to all learners; also the term \"idempotent\" is not defined in plain language.",
+          "evidence": "Table under \"Safe vs Idempotent\" uses ✅/❌ symbols.",
+          "suggestion": "Add a brief definition of idempotent (e.g., \"repeating the request has the same effect\") and replace symbols with text for clarity.",
           "origin": "llm"
         },
         {
@@ -868,9 +957,9 @@
           "category": "assessment",
           "severity": "low",
           "section_id": "s6",
-          "description": "Quiz question 2 includes option C \"To bookmark a page\" which is not a correct use of POST but could be confusing as bookmarking is typically GET.",
-          "evidence": "Option C: \"To bookmark a page\"",
-          "suggestion": "Replace with a clearly incorrect option such as \"To delete a resource\".",
+          "description": "Quiz question 5 asks learners to infer from a 201 response but does not explicitly connect it to the earlier explanation of POST creating resources.",
+          "evidence": "Question 5: \"A POST request receives a 201 response. What should you infer?\"",
+          "suggestion": "Add a short explanatory note in the quiz or in the lesson that 201 indicates a resource was created to reinforce the link.",
           "origin": "llm"
         },
         {
@@ -878,9 +967,9 @@
           "category": "timing",
           "severity": "low",
           "section_id": "s5",
-          "description": "Activity time allotment (9 min) may be tight for all four steps plus table completion, especially for beginners.",
-          "evidence": "s5 allotted 9 min",
-          "suggestion": "Extend activity to 12 min or split into two parts.",
+          "description": "The activity allocates 9 minutes but includes five curl commands plus a table to fill; this may be tight for beginners.",
+          "evidence": "Activity steps 1-5 plus table.",
+          "suggestion": "Provide a pre‑filled example table and reduce the number of curl commands to two (GET and POST) to fit the time budget.",
           "origin": "llm"
         }
       ],
@@ -901,7 +990,7 @@
           "coverage": "full"
         },
         {
-          "component": "Distinguish 2xx, 4xx, and 5xx response status code categories and identify common codes within each",
+          "component": "Distinguish 2xx, 4xx, and 5xx response status code families and identify common codes within each",
           "taught_in": [
             "s3"
           ],
@@ -915,17 +1004,17 @@
         }
       ],
       "rubric": {
-        "objective_alignment": 4,
+        "objective_alignment": 5,
         "clarity": 4,
         "structure_and_flow": 4,
         "examples_quality": 4,
-        "practical_application": 4,
-        "assessment_alignment": 4,
+        "practical_application": 5,
+        "assessment_alignment": 5,
         "engagement": 4,
         "time_feasibility": 4,
-        "audience_fit": 4
+        "audience_fit": 5
       },
-      "created_at": "2026-11-07T10:09:39+00:00"
+      "created_at": "2026-11-07T10:33:03+00:00"
     }
   },
   "applied_issue_ids": []

@@ -1,18 +1,18 @@
 {
   "layer": "qc_instructional",
-  "lesson_version": 2,
+  "lesson_version": 3,
   "model": "openai/gpt-oss-20b",
-  "score": 79,
-  "summary": "The lesson aligns well with the stated objectives, provides clear structure, and includes practical examples and assessment. Minor issues around wording, example accessibility, and activity pacing should be addressed to enhance learner experience.",
+  "score": 85,
+  "summary": "The lesson aligns well with the objectives, offers clear explanations, solid examples, and practical application. Minor adjustments to quiz wording, example breadth, and timing would enhance clarity and learner confidence.",
   "issues": [
     {
       "id": "I1",
       "category": "alignment",
       "severity": "medium",
       "section_id": "s6",
-      "description": "Quiz question 3 asks about 404 but the answer key incorrectly cites 404 as client error; the explanation in the key references 404 as non‑existent resource, which is correct, but the wording in the question could mislead learners into thinking 404 is a server error.",
-      "evidence": "Question 3: \"What does a 404 status code indicate?\" – answer key says \"Client requested a non‑existent resource\" but the question wording could be interpreted as a server error.",
-      "suggestion": "Rephrase question to: \"A 404 status code indicates that the requested resource does not exist on the server.\"",
+      "description": "Quiz question 3 asks about 404 but answer key incorrectly cites 404 as client error; the explanation in the key is correct but the question wording could mislead learners into thinking 404 is a server error.",
+      "evidence": "Question 3: \"What does a 404 status code indicate?\" – answer key says client requested a non‑existent resource.",
+      "suggestion": "Rephrase answer key to explicitly state 404 is a client error and add a brief note in the question to avoid confusion.",
       "origin": "llm"
     },
     {
@@ -20,29 +20,29 @@
       "category": "examples",
       "severity": "medium",
       "section_id": "s4",
-      "description": "Worked examples rely heavily on curl syntax; beginners may not be familiar with command line, reducing accessibility.",
-      "evidence": "Examples 1-3 all use bash commands without explanation of flags.",
-      "suggestion": "Add a brief explanation of each curl flag, or provide a GUI-based tool example (e.g., Postman) to broaden accessibility.",
+      "description": "Worked examples rely on a fake API that does not allow triggering 400 errors, limiting the demonstration of client‑error handling.",
+      "evidence": "Example 3 notes that JSONPlaceholder cannot trigger 400.",
+      "suggestion": "Include a second example using httpbin.org/status/400 to show a real 400 response, or explain why 400 cannot be demonstrated with the chosen API.",
       "origin": "llm"
     },
     {
       "id": "I3",
-      "category": "practical_application",
+      "category": "engagement",
       "severity": "medium",
-      "section_id": "s5",
-      "description": "Activity steps 4 and 5 assume availability of a mock server for 500 errors; not all learners will have this setup, leading to incomplete practice.",
-      "evidence": "Step 5: \"Trigger a server error (optional – use a mock service that returns 500\"",
-      "suggestion": "Provide a ready‑to‑use mock endpoint (e.g., https://httpstat.us/500) or include a local script example.",
+      "section_id": "s1",
+      "description": "Hook uses a scenario but could be more interactive by asking learners to predict the outcome before revealing the explanation.",
+      "evidence": "Hook text only describes scenario.",
+      "suggestion": "Add a quick poll or a prompt: \"What do you think will happen when you click Submit?\" to increase engagement.",
       "origin": "llm"
     },
     {
       "id": "I4",
       "category": "clarity",
       "severity": "low",
-      "section_id": "s1",
-      "description": "Hook uses phrase \"web page sometimes disappear\" – minor grammatical error; could confuse beginners.",
-      "evidence": "\"Why does a web page sometimes disappear after you click a button?\"",
-      "suggestion": "Change to \"Why does a web page sometimes disappear after you click a button?\" (add question mark) and consider rephrasing to \"Why might a web page disappear after you click a button?\"",
+      "section_id": "s2",
+      "description": "The table of safe vs idempotent properties uses check marks that may not be accessible to all learners; also the term \"idempotent\" is not defined in plain language.",
+      "evidence": "Table under \"Safe vs Idempotent\" uses ✅/❌ symbols.",
+      "suggestion": "Add a brief definition of idempotent (e.g., \"repeating the request has the same effect\") and replace symbols with text for clarity.",
       "origin": "llm"
     },
     {
@@ -50,9 +50,9 @@
       "category": "assessment",
       "severity": "low",
       "section_id": "s6",
-      "description": "Quiz question 2 includes option C \"To bookmark a page\" which is not a correct use of POST but could be confusing as bookmarking is typically GET.",
-      "evidence": "Option C: \"To bookmark a page\"",
-      "suggestion": "Replace with a clearly incorrect option such as \"To delete a resource\".",
+      "description": "Quiz question 5 asks learners to infer from a 201 response but does not explicitly connect it to the earlier explanation of POST creating resources.",
+      "evidence": "Question 5: \"A POST request receives a 201 response. What should you infer?\"",
+      "suggestion": "Add a short explanatory note in the quiz or in the lesson that 201 indicates a resource was created to reinforce the link.",
       "origin": "llm"
     },
     {
@@ -60,9 +60,9 @@
       "category": "timing",
       "severity": "low",
       "section_id": "s5",
-      "description": "Activity time allotment (9 min) may be tight for all four steps plus table completion, especially for beginners.",
-      "evidence": "s5 allotted 9 min",
-      "suggestion": "Extend activity to 12 min or split into two parts.",
+      "description": "The activity allocates 9 minutes but includes five curl commands plus a table to fill; this may be tight for beginners.",
+      "evidence": "Activity steps 1-5 plus table.",
+      "suggestion": "Provide a pre‑filled example table and reduce the number of curl commands to two (GET and POST) to fit the time budget.",
       "origin": "llm"
     }
   ],
@@ -83,7 +83,7 @@
       "coverage": "full"
     },
     {
-      "component": "Distinguish 2xx, 4xx, and 5xx response status code categories and identify common codes within each",
+      "component": "Distinguish 2xx, 4xx, and 5xx response status code families and identify common codes within each",
       "taught_in": [
         "s3"
       ],
@@ -97,15 +97,15 @@
     }
   ],
   "rubric": {
-    "objective_alignment": 4,
+    "objective_alignment": 5,
     "clarity": 4,
     "structure_and_flow": 4,
     "examples_quality": 4,
-    "practical_application": 4,
-    "assessment_alignment": 4,
+    "practical_application": 5,
+    "assessment_alignment": 5,
     "engagement": 4,
     "time_feasibility": 4,
-    "audience_fit": 4
+    "audience_fit": 5
   },
-  "created_at": "2026-11-07T10:09:39+00:00"
+  "created_at": "2026-11-07T10:33:03+00:00"
 }

@@ -1,7 +1,7 @@
 # SQL Joins: Combining Data from Multiple Tables
 
 **Learning objective:** Differentiate INNER JOIN, LEFT JOIN and FULL OUTER JOIN and choose the correct join to answer a given query.  
-**Duration:** 49 minutes (self-study or instructor-led)  
+**Duration:** 45 minutes (self-study or instructor-led)  
 **Audience:** Undergraduate students who know basic SELECT queries
 
 ### By the end of this lesson you will be able to:
@@ -15,20 +15,20 @@
 | # | Section | Type | Minutes | Objectives |
 |---|---|---|---|---|
 | 1 | Why do some rows disappear? | hook | 3 | O1, O2 |
-| 2 | INNER JOIN – matching rows only | concept | 8 | O1 |
-| 3 | LEFT (OUTER) JOIN – keep everything from the left | concept | 8 | O1, O3 |
-| 4 | FULL OUTER JOIN – keep everything from both sides | concept | 6 | O1, O3 |
+| 2 | INNER JOIN – matching rows only | concept | 7 | O1 |
+| 3 | LEFT (OUTER) JOIN – keep everything from the left | concept | 7 | O1, O3 |
+| 4 | FULL OUTER JOIN – keep everything from both sides | concept | 5 | O1, O3 |
 | 5 | Three‑table join and join order | example | 6 | O2, O3 |
-| 6 | Hands‑on: Choose the right join | activity | 10 | O1, O2, O3 |
+| 6 | Hands‑on: Choose the right join | activity | 9 | O1, O2, O3 |
 | 7 | Quiz – pick the right join | knowledge check | 6 | O1, O2, O3 |
 | 8 | Key takeaways & common pitfalls | summary | 2 | O1, O2, O3 |
-| | **Total** | | **49** | |
+| | **Total** | | **45** | |
 
 ## 1. Why do some rows disappear? (3 min)
 
 You have two tables – **students** and **enrollments**. Running `SELECT * FROM students;` shows 120 rows, but `SELECT * FROM students JOIN enrollments ON students.id = enrollments.student_id;` returns only 95 rows. *What happened to the missing 25 students?* This puzzle introduces the idea that different joins keep or discard rows.
 
-## 2. INNER JOIN – matching rows only (8 min)
+## 2. INNER JOIN – matching rows only (7 min)
 
 An **INNER JOIN** returns rows where the join condition is true for both tables. The syntax is:
 ```sql
@@ -36,7 +36,7 @@ SELECT …
 FROM table1
 INNER JOIN table2 ON table1.col = table2.col;
 ```
-PostgreSQL describes this as combining rows that satisfy the expression [1]. The join is evaluated left‑to‑right unless parentheses change the order [2].
+PostgreSQL describes this as combining rows that satisfy the expression [1]. When several joins are chained they nest left‑to‑right, and parentheses can change the nesting [2]. For INNER JOINs the nesting doesn't change the result, but for OUTER JOINs it can.
 
 **Analogy:** Think of two circles overlapping; only the intersecting area (matching rows) is kept.
 
@@ -46,7 +46,7 @@ PostgreSQL describes this as combining rows that satisfy the expression [1]. T
 | 2           | Ben  | 102                   |
 | …           | …    | …                     |
 
-## 3. LEFT (OUTER) JOIN – keep everything from the left (8 min)
+## 3. LEFT (OUTER) JOIN – keep everything from the left (7 min)
 
 A **LEFT OUTER JOIN** returns all rows from the left table and matching rows from the right; non‑matching right rows become `NULL`. Oracle defines it as preserving unmatched rows from the first table [3].
 ```sql
@@ -58,7 +58,7 @@ Rows without enrollments appear with `NULL` in `e.course_id`.
 
 **NULL handling:** `NULL` never equals another `NULL`, so a left join can produce `NULL` values that must be considered in later calculations [4].
 
-## 4. FULL OUTER JOIN – keep everything from both sides (6 min)
+## 4. FULL OUTER JOIN – keep everything from both sides (5 min)
 
 A **FULL OUTER JOIN** returns the union of a left and a right outer join: all rows from both tables, with `NULL` filling gaps where no match exists. PostgreSQL supports this join type [1].
 ```sql
@@ -80,7 +80,7 @@ FROM students s
 JOIN enrollments e ON s.id = e.student_id
 JOIN courses c ON e.course_id = c.id;
 ```
-PostgreSQL evaluates joins left‑to‑right, but parentheses can be used to control the logical order [2]. This can affect performance because the optimizer may choose different join strategies [5].
+Joins nest left‑to‑right, and parentheses can change the nesting [2]. With INNER JOINs the database's query planner is free to reorder them for speed, so you write joins for *correctness* and let the optimizer handle performance [5].
 
 **What if we need all students and all courses, even if no enrollment exists?**
 ```sql
@@ -90,7 +90,7 @@ FULL OUTER JOIN enrollments e ON s.id = e.student_id
 FULL OUTER JOIN courses c ON e.course_id = c.id;
 ```
 
-## 6. Hands‑on: Choose the right join (10 min)
+## 6. Hands‑on: Choose the right join (9 min)
 
 1. **Setup** (2 min) – Run the provided script to create `students`, `enrollments`, and `courses` with sample data.
 2. **Task 1** (3 min) – Write a query that lists every student and the courses they are enrolled in; include students with no enrollments. (Use LEFT JOIN.)
@@ -126,7 +126,8 @@ FULL OUTER JOIN courses c ON e.course_id = c.id;
 - **LEFT** = keep all left rows; unmatched right columns become `NULL`.
 - **FULL** = keep all rows from both sides; `NULL` fills gaps.
 - **NULL** never matches another `NULL`; test for it explicitly.
-- Use parentheses to guide join order for performance, especially with three+ tables.
+- With OUTER JOINs, order and parentheses can change the result. Check which table must keep all its rows.
+- **Pitfall:** after a LEFT JOIN, a condition on the right table in `WHERE` (e.g. `WHERE e.grade > 50`) discards the NULL rows and silently turns it into an INNER JOIN. Put that condition in the `ON` clause instead.
 - Common mistake: assuming a LEFT JOIN will remove rows – it never does.
 
 ## Supplementary videos (optional, not counted in the 45 minutes)

@@ -1,42 +1,22 @@
 {
   "layer": "qc_factual",
-  "lesson_version": 2,
+  "lesson_version": 3,
   "model": "openai/gpt-oss-20b",
-  "score": 85,
-  "summary": "The lesson accurately presents core HTTP method semantics and status code meanings, with most claims supported by reputable MDN and RFC sources. Minor gaps include lack of explicit citations for some statements and a few oversimplified claims about bookmarking and caching. Overall research quality is high, but adding precise references and clarifying ambiguous points would strengthen factual accuracy. (Claims checked: 17; supported by sources: 94%.)",
+  "score": 94,
+  "summary": "The lesson accurately presents core HTTP method semantics and status code families, with most claims supported by authoritative sources such as MDN and RFC 7231. Minor oversimplifications (e.g., bookmarking/caching for GET) and a few uncited assertions are noted, but overall research quality and factual accuracy are high. (Claims checked: 25; supported by sources: 98%.)",
   "issues": [
     {
       "id": "F1",
-      "category": "gap",
-      "severity": "high",
-      "section_id": "s2",
-      "description": "Missing explicit definition of idempotence for POST (though implied)",
-      "evidence": "S2",
-      "suggestion": "Add statement that POST is not idempotent with citation",
-      "origin": "llm"
-    },
-    {
-      "id": "F2",
       "category": "misleading",
       "severity": "medium",
       "section_id": "s2",
       "description": "Claim that GET is ideal for bookmarking and caching is not explicitly supported by cited sources",
       "evidence": "S1",
-      "suggestion": "Add citation to caching behavior or rephrase",
+      "suggestion": "Add citation to caching behavior or rephrase to 'commonly used for bookmarking and caching due to idempotence and cacheability'",
       "origin": "llm"
     },
     {
-      "id": "F3",
-      "category": "citation",
-      "severity": "medium",
-      "section_id": "s2",
-      "description": "Content-Type header claim lacks direct citation",
-      "evidence": "S4",
-      "suggestion": "Provide explicit source stating Content-Type is required for POST bodies",
-      "origin": "llm"
-    },
-    {
-      "id": "F4",
+      "id": "F2",
       "category": "process",
       "severity": "low",
       "section_id": null,
@@ -46,13 +26,23 @@
       "origin": "rule"
     },
     {
-      "id": "F5",
-      "category": "inconsistency",
+      "id": "F3",
+      "category": "gap",
+      "severity": "low",
+      "section_id": "s2",
+      "description": "Missing explicit mention that POST is not cacheable",
+      "evidence": "S2",
+      "suggestion": "Include note that POST responses are generally not cached unless explicitly allowed by Cache-Control",
+      "origin": "llm"
+    },
+    {
+      "id": "F4",
+      "category": "citation",
       "severity": "low",
       "section_id": "s4",
-      "description": "Example 3 shows 400 Bad Request but does not explain why (invalid data)",
-      "evidence": "S5",
-      "suggestion": "Clarify that server rejected due to missing required fields",
+      "description": "Example 3 claims JSONPlaceholder does not validate input to trigger 400, but no source cited",
+      "evidence": "none",
+      "suggestion": "Add citation or remove claim",
       "origin": "llm"
     }
   ],
@@ -104,19 +94,19 @@
         "S1"
       ],
       "verdict": "partially_supported",
-      "note": "MDN mentions reading data; bookmarking and caching are common but not explicitly stated",
+      "note": "MDN mentions reading data; bookmarking and caching are implied but not explicitly stated",
       "verified_by": [
         "S1"
       ]
     },
     {
-      "claim": "POST is not safe and not idempotent",
+      "claim": "POST requests send data in the request body and are not safe or idempotent",
       "section_id": "s2",
       "cited": [
         "S2"
       ],
       "verdict": "supported",
-      "note": "MDN states POST is not safe nor idempotent",
+      "note": "MDN states POST is not safe or idempotent",
       "verified_by": [
         "S2"
       ]
@@ -134,15 +124,171 @@
       ]
     },
     {
-      "claim": "Content-Type header is required for POST bodies",
+      "claim": "Content-Type header is sent whenever the request has a body (POST, PUT, PATCH)",
       "section_id": "s2",
       "cited": [
         "S4"
       ],
-      "verdict": "partially_supported",
-      "note": "MDN notes Content-Type describes body; not strictly required but recommended",
+      "verdict": "supported",
+      "note": "MDN reference explains Content-Type usage",
       "verified_by": [
         "S4"
+      ]
+    },
+    {
+      "claim": "Host header together with request line identifies the target resource",
+      "section_id": "s2",
+      "cited": [
+        "S4"
+      ],
+      "verdict": "supported",
+      "note": "MDN reference mentions Host header role",
+      "verified_by": [
+        "S4"
+      ]
+    },
+    {
+      "claim": "2xx status codes indicate success – request was received, understood, and processed",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 2xx as success",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "4xx status codes indicate client error – bad syntax or cannot be fulfilled",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 4xx as client error",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "5xx status codes indicate server error – server failed to fulfill a valid request",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 5xx as server error",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "200 OK means GET succeeded and body contains requested data",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 specifies 200 OK semantics",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "201 Created is returned after a successful POST that created a new resource",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 specifies 201 Created semantics",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "400 Bad Request indicates client sent malformed data (e.g., missing required fields)",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 400 Bad Request",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "404 Not Found means target URL does not exist",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 404 Not Found",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "500 Internal Server Error signals a problem on the server side, not the client’s fault",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 500 Internal Server Error",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "503 Service Unavailable is a 5xx server error indicating service unavailable",
+      "section_id": "s3",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "RFC 7231 defines 503 Service Unavailable",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "GET request to https://jsonplaceholder.typicode.com/posts/1 returns 200 OK",
+      "section_id": "s4",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "curl example shows 200 OK",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "POST request to https://jsonplaceholder.typicode.com/posts returns 201 Created",
+      "section_id": "s4",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "curl example shows 201 Created",
+      "verified_by": [
+        "S5"
+      ]
+    },
+    {
+      "claim": "GET request to https://jsonplaceholder.typicode.com/posts/99999 returns 404 Not Found",
+      "section_id": "s4",
+      "cited": [
+        "S5"
+      ],
+      "verdict": "supported",
+      "note": "curl example shows 404 Not Found",
+      "verified_by": [
+        "S5"
       ]
     },
     {
@@ -164,19 +310,19 @@
         "S5"
       ],
       "verdict": "supported",
-      "note": "Answer key cites S5 which covers POST semantics",
+      "note": "Quiz answer aligns with RFC",
       "verified_by": [
         "S5"
       ]
     },
     {
-      "claim": "404 indicates the target URL does not exist",
+      "claim": "404 indicates client requested a non-existent resource",
       "section_id": "s6",
       "cited": [
         "S5"
       ],
       "verdict": "supported",
-      "note": "RFC 7231 defines 404 as Not Found",
+      "note": "Quiz answer aligns with RFC",
       "verified_by": [
         "S5"
       ]
@@ -188,81 +334,19 @@
         "S5"
       ],
       "verdict": "supported",
-      "note": "RFC 7231 defines 503",
+      "note": "Quiz answer aligns with RFC",
       "verified_by": [
         "S5"
       ]
     },
     {
-      "claim": "201 response to POST indicates a new resource was created",
+      "claim": "201 response to POST means a new resource was created successfully",
       "section_id": "s6",
       "cited": [
         "S5"
       ],
       "verdict": "supported",
-      "note": "RFC 7231 defines 201 Created",
-      "verified_by": [
-        "S5"
-      ]
-    },
-    {
-      "claim": "GET returns 200 OK for successful retrieval",
-      "section_id": "s4",
-      "cited": [
-        "S5"
-      ],
-      "verdict": "supported",
-      "note": "Example shows 200",
-      "verified_by": [
-        "S5"
-      ]
-    },
-    {
-      "claim": "POST returns 201 Created for successful creation",
-      "section_id": "s4",
-      "cited": [
-        "S5"
-      ],
-      "verdict": "supported",
-      "note": "Example shows 201",
-      "verified_by": [
-        "S5"
-      ]
-    },
-    {
-      "claim": "400 Bad Request indicates malformed client data",
-      "section_id": "s4",
-      "cited": [
-        "S5"
-      ],
-      "verdict": "supported",
-      "note": "RFC 7231 defines 400",
-      "verified_by": [
-        "S5"
-      ]
-    },
-    {
-      "claim": "GET is safe and idempotent, POST is not safe nor idempotent",
-      "section_id": "s7",
-      "cited": [
-        "S1",
-        "S2"
-      ],
-      "verdict": "supported",
-      "note": "Summary repeats earlier claims",
-      "verified_by": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "claim": "Common codes include 200, 201, 400, 401, 404, 500, 503",
-      "section_id": "s7",
-      "cited": [
-        "S5"
-      ],
-      "verdict": "supported",
-      "note": "RFC 7231 lists these codes",
+      "note": "Quiz answer aligns with RFC",
       "verified_by": [
         "S5"
       ]
@@ -273,58 +357,58 @@
       "source_id": "S1",
       "tier": "A",
       "relevance": "high",
-      "note": "MDN authoritative reference for GET semantics"
+      "note": "MDN Web Docs, authoritative for HTTP method semantics"
     },
     {
       "source_id": "S2",
       "tier": "A",
       "relevance": "high",
-      "note": "MDN authoritative reference for HTTP methods"
+      "note": "MDN Web Docs, authoritative for HTTP method semantics"
     },
     {
       "source_id": "S3",
       "tier": "A",
       "relevance": "medium",
-      "note": "General HTTP overview, not directly cited"
+      "note": "General MDN overview, less specific to claims"
     },
     {
       "source_id": "S4",
       "tier": "A",
       "relevance": "medium",
-      "note": "MDN reference for headers, used for Content-Type claim"
+      "note": "MDN reference for headers, reliable but not primary for method semantics"
     },
     {
       "source_id": "S5",
       "tier": "A",
       "relevance": "high",
-      "note": "RFC 7231 official standard for status codes"
+      "note": "RFC 7231, official standard for HTTP/1.1 semantics"
     },
     {
       "source_id": "S6",
       "tier": "B",
       "relevance": "low",
-      "note": "Wikipedia list, not directly cited"
+      "note": "Wikipedia list, secondary source"
     },
     {
       "source_id": "S7",
       "tier": "B",
       "relevance": "low",
-      "note": "Wikipedia overview, not directly cited"
+      "note": "Wikipedia overview, secondary source"
     },
     {
       "source_id": "S8",
       "tier": "C",
       "relevance": "low",
-      "note": "MDN alternative source, not directly cited"
+      "note": "MDN devdoc, duplicate of S1"
     },
     {
       "source_id": "S9",
       "tier": "C",
-      "relevance": "low",
-      "note": "Blog article, not directly cited"
+      "relevance": "medium",
+      "note": "Third‑party guide, not primary source"
     }
   ],
   "objective_coverage": [],
   "rubric": {},
-  "created_at": "2026-11-07T10:09:18+00:00"
+  "created_at": "2026-11-07T10:32:44+00:00"
 }

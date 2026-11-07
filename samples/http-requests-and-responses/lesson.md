@@ -47,7 +47,7 @@ Imagine you built a form that saves a new blog post. When you press **Submit**, 
 
 **Headers that matter**
 - `Accept` tells the server which media types you can handle.
-- `Content-Type` describes the body you are sending (only for POST).
+- `Content-Type` describes the media type of a message body. You send it whenever your request has a body (POST, PUT, PATCH), and servers also send it on responses.
 - `Host` and the request line together identify the target resource [3].
 
 ## 3. Response status code families (7 min)
@@ -101,15 +101,15 @@ Content-Type: application/json; charset=utf-8
 - Status **201** → resource created (2xx family) [4].
 - Request includes a JSON body and `Content-Type` header.
 
-### Example 3 – Bad request (4xx)
+### Example 3 – Client error (4xx)
+JSONPlaceholder is a *fake* API: it accepts any body and does not validate input, so you can't trigger a 400 there.
+Ask for a resource that doesn't exist instead:
 ```bash
-curl -i -X POST https://jsonplaceholder.typicode.com/posts \
-     -H "Content-Type: application/json" \
-     -d '{"invalid":"data"}'
+curl -i https://jsonplaceholder.typicode.com/posts/99999
 ```
-Possible response:
+Response:
 ```
-HTTP/1.1 400 Bad Request
+HTTP/1.1 404 Not Found
 ```
 Shows how the server signals client‑side problems [4].
 
@@ -136,8 +136,9 @@ Use **curl** (or any HTTP client) to send GET and POST requests to a public test
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" https://jsonplaceholder.typicode.com/unknown
    ```
-5. **Trigger a server error** (optional – use a mock service that returns 500, e.g., a local mock server configured for this purpose).
+5. **Trigger a server error** (optional): `curl -s -o /dev/null -w "%{http_code}\n" https://httpbin.org/status/500` (httpbin returns whatever status code you ask for).
 6. Fill the table below:
+
 | Request | URL | Method | Status code | Family |
 |---------|-----|--------|-------------|--------|
 | 1 | … | GET | … | … |
@@ -176,11 +177,11 @@ Use **curl** (or any HTTP client) to send GET and POST requests to a public test
    - C) The client sent bad data
 
 **Answer key**
-1. GET is defined as safe and idempotent【S1】.
-2. POST is used for actions that change server state【S5】.
-3. 404 signals the target URL does not exist【S5】.
-4. 5xx codes indicate server‑side problems; 503 means service unavailable【S5】.
-5. 201 means the server created a resource as a result of the POST【S5】.
+1. GET is defined as safe and idempotent[1].
+2. POST is used for actions that change server state[4].
+3. 404 signals the target URL does not exist[4].
+4. 5xx codes indicate server‑side problems; 503 means service unavailable[4].
+5. 201 means the server created a resource as a result of the POST[4].
 
 ## 7. Key takeaways & common pitfalls (6 min)
 
@@ -204,10 +205,10 @@ Use the status code to decide whether to retry, show a user‑friendly error, or
 
 ## References
 
-1. GET request method - HTTP | MDN - MDN Web Docs. *developer.mozilla.org*. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET
+1. GET request method - HTTP. *developer.mozilla.org*. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET
 2. HTTP request methods - MDN Web Docs. *developer.mozilla.org*. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods
-3. HTTP reference - HTTP | MDN - MDN Web Docs. *developer.mozilla.org*. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference
-4. RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1): Semantics ...List of HTTP status codes - WikipediaHTTP Status Codes Reference — Complete List with ExplanationsHypertext Transfer Protocol (HTTP) Status Code RegistryHTTP Status Codes Reference - 1xx-5xx Explained - OltoolSMTP Status Codes Explained — 2xx, 4xx, 5xx & X.Y.ZHTTP Status Code Lookup – Find & Explain 1xx, 2xx, 3xx, 4xx .... *datatracker.ietf.org*. https://datatracker.ietf.org/doc/html/rfc7231
+3. HTTP reference - HTTP. *developer.mozilla.org*. https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference
+4. RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1): Semantics. *datatracker.ietf.org*. https://datatracker.ietf.org/doc/html/rfc7231
 
 ### Videos
 
