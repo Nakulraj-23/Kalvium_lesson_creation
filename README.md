@@ -11,7 +11,7 @@
 [![tests](https://github.com/Nakulraj-23/Kalvium_lesson_creation/actions/workflows/tests.yml/badge.svg)](https://github.com/Nakulraj-23/Kalvium_lesson_creation/actions/workflows/tests.yml)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-[**▶ Demo video**](DEMO_VIDEO_LINK) · [Sample: HTTP lesson](samples/http-requests-and-responses/lesson.md) · [Sample: SQL lesson](samples/sql-joins/lesson.md) · [Fact-check log](docs/FACT_CHECK.md)
+[Sample: HTTP lesson](samples/http-requests-and-responses/lesson.md) · [Sample: SQL lesson](samples/sql-joins/lesson.md) · [Fact-check log](docs/FACT_CHECK.md)
 
 </div>
 
